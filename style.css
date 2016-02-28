@@ -1,13 +1,34 @@
+/*document*/
+
+body {
+    font-family: "Open Sans", sans-serif;
+    padding-top: 0;
+    margin: 0;
+}
+
 /*Header*/
 
-.page-header {
+header {
     background-color: #999999;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 #logo {
     font-family: 'Pacifico', cursive;
     font-size: 5em;
-    padding: 0.3em;
+    padding: 0.3em 0em 0.3em 0.5em;
+    display: inline-block;
+    margin-top: 0;
+    vertical-align: middle;
+}
+
+#tryBtn {
+    background-color: lightseagreen;
+    color: white;
+    font-size: 1.2em;
+    position: relative;
+    margin-left: 80%;
 }
 
 
