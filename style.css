@@ -23,7 +23,7 @@ header {
     vertical-align: middle;
 }
 
-#tryBtn {
+.fn-click-open {
     background-color: lightseagreen;
     color: white;
     font-size: 1.2em;
@@ -33,10 +33,20 @@ header {
 
 
 /*Sidebar*/
+#sidebar{
+    background-color: lightgray;
+    display: none
+}
 
+#history-list {
+    background-color: white;
+    border-radius: 3px;
+}
 
 
 /*Photo*/
-
+#photo {
+    background-color: darkgray;
+}
 
 /*Gallery*/

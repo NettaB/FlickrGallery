@@ -5,16 +5,17 @@ define(['jquery', 'backbone'], function($, Backbone){
 
     return Backbone.View.extend({
         el: 'header',
+
         initialize: function(){
             console.log('Header view says hello world!')
         },
 
         events: {
-            'click #tryBtn' : 'alertCall'
+            'click .fn-click-open' : 'clickBtn'
         },
 
-        alertCall: function() {
-            alert ('button clicked!')
+        clickBtn: function() {
+            this.trigger('open');
         }
 
     });

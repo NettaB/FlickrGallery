@@ -11,7 +11,14 @@ define (['jquery', 'backbone', 'header_view', 'sidebar_view', 'photo_view', 'gal
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
             this.galleryView = new GalleryView();
-        }
+
+            this.headerView.on('open', this.btnClicked, this);
+        },
+
+        btnClicked: function() {
+            this.sidebarView.trigger('openView');
+        },
+
     });
     var main = new theMainView();
 });

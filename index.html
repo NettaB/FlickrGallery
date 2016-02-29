@@ -11,12 +11,43 @@
     <script data-main="scripts/main" src="scripts/external/require.js"></script>
 </head>
 <body>
+
     <header>
         <h1 id="logo">fleek</h1>
-        <button type="button" class="btn btn-lg" id="tryBtn">Try it</button>
+        <button type="button" class="btn btn-lg fn-click-open">Try it</button>
     </header>
-    <aside id="sidebar"></aside>
-    <section id="photo"></section>
+
+
+    <section class="container-fluid">
+        <div class="row">
+            <section id="photo" class="col-md-9">
+                <div>Placeholder</div>
+            </section>
+            <aside id="sidebar" class="col-md-3">
+                <div class="btn pull-right fn-click-close">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                </div><br/>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search flickr">
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+                <div id="favorites-link">
+                    <a href="#">Favorites</a>
+                </div>
+                <div id="history-list">
+                    <ul>
+                        <li>This will be templated</li>
+                    </ul>
+                </div>
+
+            </aside>
+        </div>
+    </section>
+
     <section id="gallery"></section>
 </body>
 </html>
