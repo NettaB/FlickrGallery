@@ -5,16 +5,15 @@ requirejs.config({
     baseUrl: 'scripts',
 
     shim: {
+        jquery: {
+            exports: '$'
+        },
         underscore: {
-            exports: "_"
+            exports: '_'
         },
         backbone: {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
-        },
-        mainview: {
-            deps: ['jquery', 'backbone'],
-            exports: 'MainView'
         }
     },
 
@@ -22,12 +21,10 @@ requirejs.config({
         'jquery': 'external/jquery-1.12.1.min',
         'underscore': 'external/underscore-min',
         'backbone': 'external/backbone-min',
-        'mainview': 'mainView',
-        'headerview': 'headerView'
     }
 });
 
-requirejs(['jquery', 'underscore', 'backbone', 'mainview', 'headerview'],
-function($, _, Backbone, MainView, HeaderView){
+requirejs(['jquery', 'underscore', 'backbone', 'parent_view', 'header_view', 'sidebar_view', 'photo_view', 'gallery_view'],
+function($, _, Backbone, ParentView, HeaderView, SidebarView, PhotoView, GalleryView){
 
 });
