@@ -1,7 +1,8 @@
 /**
  * Created by Netta.bondy on 28/02/2016.
  */
-define(['jquery', 'backbone', 'history.collection'], function($, Backbone, HistoryCollection){
+define(['jquery', 'backbone', 'history.collection', 'history.view'],
+    function($, Backbone, HistoryCollection, HistoryView){
 
     return Backbone.View.extend({
         el: 'aside',
@@ -9,6 +10,7 @@ define(['jquery', 'backbone', 'history.collection'], function($, Backbone, Histo
         initialize: function(){
             console.log('Sidebar view says hello world!');
             this.history = new HistoryCollection;
+            this.historyview = new HistoryView();
             this.on('openView', this.onOpenView);
         },
 

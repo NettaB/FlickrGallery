@@ -15,25 +15,31 @@ requirejs.config({
             deps: ['underscore', 'jquery'],
             exports: 'Backbone'
         },
-        localstorage: {
+        localStorage: {
             deps: ['backbone'],
             exports: 'LocalStorage'
         }
     },
 
     paths:{
-        'jquery': 'external/jquery-1.12.1.min',
-        'underscore': 'external/underscore-min',
-        'backbone': 'external/backbone-min',
-        'localstorage': '//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min',
-        'history.model': 'history_model/history.model',
-        'history.collection': 'history_model/history.collection'
+        'jquery': '../libs/jquery-1.12.1.min',
+        'underscore': '../libs/underscore-min',
+        'backbone': '../libs/backbone-min',
+        'localStorage': '//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min',
+        'header.view': 'header/header.view',
+        'sidebar.view': 'sidebar/sidebar.view',
+        'photo.view': 'photo/photo.view',
+        'gallery.view': 'gallery/gallery.view',
+        'history.model': 'sidebar/history/history_model/history.model',
+        'history.collection': 'sidebar/history/history_model/history.collection',
+        'history.view': 'sidebar/history/history_model/history.view'
     }
 });
 
-requirejs(['jquery', 'underscore', 'backbone', 'localstorage', 'parent.view', 'header.view', 'sidebar.view', 'photo.view',
-    'gallery.view', 'history.model', 'history.collection'],
+requirejs(['jquery', 'underscore', 'backbone', 'localStorage',
+    'parent.view', 'header.view', 'sidebar.view', 'photo.view',
+    'gallery.view', 'history.model', 'history.collection', 'history.view'],
 function($, _, Backbone, LocalStorage, ParentView, HeaderView, SidebarView, PhotoView,
-         GalleryView, HistoryModel, HistoryCollection){
+         GalleryView, HistoryModel, HistoryCollection, HistoryView){
 
 });
