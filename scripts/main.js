@@ -26,13 +26,13 @@ requirejs.config({
         'underscore': 'external/underscore-min',
         'backbone': 'external/backbone-min',
         'localstorage': '//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min',
-        'history_model': 'history_model/history_model',
-        'history_collection': 'history_model/history_collection'
+        'history.model': 'history_model/history.model',
+        'history.collection': 'history_model/history.collection'
     }
 });
 
-requirejs(['jquery', 'underscore', 'backbone', 'localstorage', 'parent_view', 'header_view', 'sidebar_view', 'photo_view',
-    'gallery_view', 'history_model', 'history_collection'],
+requirejs(['jquery', 'underscore', 'backbone', 'localstorage', 'parent.view', 'header.view', 'sidebar.view', 'photo.view',
+    'gallery.view', 'history.model', 'history.collection'],
 function($, _, Backbone, LocalStorage, ParentView, HeaderView, SidebarView, PhotoView,
          GalleryView, HistoryModel, HistoryCollection){
 

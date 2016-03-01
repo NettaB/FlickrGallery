@@ -1,7 +1,7 @@
 /**
  * Created by Netta.bondy on 28/02/2016.
  */
-define (['jquery', 'backbone', 'header_view', 'sidebar_view', 'photo_view', 'gallery_view'],
+define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view', 'gallery.view'],
     function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView){
 
     var theMainView = Backbone.View.extend({
@@ -17,7 +17,7 @@ define (['jquery', 'backbone', 'header_view', 'sidebar_view', 'photo_view', 'gal
 
         btnClicked: function() {
             this.sidebarView.trigger('openView');
-        },
+        }
 
     });
     var main = new theMainView();

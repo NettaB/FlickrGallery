@@ -1,7 +1,7 @@
 /**
  * Created by Netta.bondy on 28/02/2016.
  */
-define(['jquery', 'backbone', 'history_collection'], function($, Backbone, HistoryCollection){
+define(['jquery', 'backbone', 'history.collection'], function($, Backbone, HistoryCollection){
 
     return Backbone.View.extend({
         el: 'aside',
