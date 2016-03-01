@@ -26,6 +26,8 @@ requirejs.config({
         'underscore': '../libs/underscore-min',
         'backbone': '../libs/backbone-min',
         'localStorage': '//cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.1.16/backbone.localStorage-min',
+        'dot': '//cdnjs.cloudflare.com/ajax/libs/dot/1.0.3/doT.min',
+        'text': '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.12/text.min',
         'header.view': 'header/header.view',
         'sidebar.view': 'sidebar/sidebar.view',
         'photo.view': 'photo/photo.view',
@@ -36,10 +38,11 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'underscore', 'backbone', 'localStorage',
+requirejs(['jquery', 'underscore', 'backbone', 'localStorage', 'dot', 'text',
     'parent.view', 'header.view', 'sidebar.view', 'photo.view',
     'gallery.view', 'history.model', 'history.collection', 'history.view'],
-function($, _, Backbone, LocalStorage, ParentView, HeaderView, SidebarView, PhotoView,
+function($, _, Backbone, LocalStorage, Dot, Text,
+         ParentView, HeaderView, SidebarView, PhotoView,
          GalleryView, HistoryModel, HistoryCollection, HistoryView){
 
 });

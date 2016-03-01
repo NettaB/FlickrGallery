@@ -17,6 +17,7 @@ define(['jquery', 'backbone', 'history.collection', 'history.view'],
         events: {
             'click .fn-click-close': 'clickClose',
             'click #search-btn': 'doSearch'
+            //'click .history-items': 'doSearch'
         },
 
         onOpenView: function() {
@@ -30,12 +31,12 @@ define(['jquery', 'backbone', 'history.collection', 'history.view'],
 
         doSearch: function() {
             var searchVal = $('#search-input').val();
-            console.log(searchVal);
-            this.history.add({name: searchVal});
-            console.log(this.history.length);
+            //create new model in history collection
+            this.history.create({name: searchVal});
 
             //trigger search event in main view to request data
             this.trigger('search');
+            this.historyview.trigger('newSearchDone')
 
         }
 
