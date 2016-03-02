@@ -10,12 +10,15 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
 
         initialize: function(){
             var that = this,
+                //init collection
                 history = new HistoryCollection;
+                //init array for template iteration
                 that.historyArr = [];
+                    //fetch data from local storage
                     history.fetch()
                         .done(function(response) {
-                            console.log(response);
-                            //creates array of search terms
+
+                            //creates array of search names
                             for (var i = 0; i < response.length; i++){
                                 that.historyArr.push(response[i].name);
                             }
@@ -28,16 +31,14 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
                         });
 
 
-            //listen for changes
-            //this.on('add', this.render())
-            //this.on('search', that.historyAdd());
+            //listens for search event on parent view
             this.on('newSearchDone', this.onNewSearchDone, this)
         },
 
 
         render: function() {
             var that = this;
-            //slices array to show last 10 results
+            //slices array to show last 20 results
             var historyDispArr = [],
             historyDispLength = that.historyArr.length - 20;
             if(that.historyArr.length < 21) {
@@ -45,7 +46,6 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
             } else {
                 historyDispArr = that.historyArr.slice(historyDispLength).reverse()
             }
-            //console.log(historyDispArr);
 
             //templating
             var historyItem = Dot.template(HistoryItemTemplate);
@@ -54,14 +54,14 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
         return this;
         },
 
-        //listens to new searches
+        //callback for new search event
         onNewSearchDone: function(){
             var that = this,
                 history = new HistoryCollection;
             that.historyArr = [];
             history.fetch()
                 .done(function(response) {
-                    console.log(response);
+                    //console.log(response);
                     //creates array of search terms
                     for (var i = 0; i < response.length; i++){
                         that.historyArr.push(response[i].name);

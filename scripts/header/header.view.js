@@ -13,16 +13,19 @@ define(['jquery', 'backbone', 'text!header/tmpl/header.tmpl.html'],
         },
 
         render: function(){
+            //template injection from header.tmpl
             this.$el.append(HeaderTemplate)
 
         },
 
         events: {
+            //handles header button click
             'click .fn-click-open' : 'clickBtn'
         },
 
+        //triggers openSidebar event on parent view
         clickBtn: function() {
-            this.trigger('open');
+            this.trigger('openSidebar');
         }
 
     });
