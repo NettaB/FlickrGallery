@@ -12,7 +12,8 @@ define(['backbone', 'localStorage', 'history.model'],
             },
             render: function() {
 
-            }
+                }
+
 
         });
 });

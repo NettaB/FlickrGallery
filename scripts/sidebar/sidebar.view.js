@@ -1,8 +1,8 @@
 /**
  * Created by Netta.bondy on 28/02/2016.
  */
-define(['jquery', 'backbone', 'history.collection', 'history.view', 'search.service'],
-    function($, Backbone, HistoryCollection, HistoryView, SearchCollection){
+define(['jquery', 'backbone', 'history.collection', 'history.view'],
+    function($, Backbone, HistoryCollection, HistoryView){
 
     return Backbone.View.extend({
         el: 'aside',
@@ -15,8 +15,6 @@ define(['jquery', 'backbone', 'history.collection', 'history.view', 'search.serv
             //init subview
             this.historyView = new HistoryView();
 
-            //init flickr api collection
-            this.searchCollection = new SearchCollection;
             //listens for openSidebar event on parent view
             this.on('openView', this.onOpenView);
         },
@@ -53,8 +51,8 @@ define(['jquery', 'backbone', 'history.collection', 'history.view', 'search.serv
 
             //deliver search term to search collection
             //this.searchCollection.searchTerm = String(searchVal);
-            //triggers event in search collection
-            this.searchCollection.trigger('newSearchDone',[searchVal]);
+            //triggers event in search service
+            //this.searchCollection.trigger('newSearchDone',[searchVal]);
 
 
 
