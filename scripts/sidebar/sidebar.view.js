@@ -33,8 +33,9 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             //handles close click
             'click .fn-click-close': 'clickClose',
             //handles search click
-            'click #search-btn': 'doSearch'
-            //'click '
+            'click #search-btn': 'doSearch',
+            //handles search on enter
+            'keyup #search-input': 'enterSearch'
         },
 
         //opens sidebar menu
@@ -53,26 +54,35 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             //validations
             if (!searchVal) {
                 alert("Please enter a search value.")
+            } else if (searchVal == " " || searchVal == "  " || searchVal == "   ") {
+                alert("Please enter a valid search value.")
+            } else {
+                //create new model in history collection
+                this.history.create({name: searchVal});
+                //triggers event in history subview
+                this.historyView.trigger('newSearchDone');
+                //trigger search event in main view to request data
+                this.trigger('searchEvent', [searchVal]);
             }
+        },
 
-            //create new model in history collection
-            this.history.create({name: searchVal});
-            //triggers event in history subview
-            this.historyView.trigger('newSearchDone');
-
-            //deliver search term to search collection
-            //this.searchCollection.searchTerm = String(searchVal);
-            //triggers event in search service
-            //this.searchCollection.trigger('newSearchDone',[searchVal]);
-
-
-
-            //trigger search event in main view to request data
-            this.trigger('searchEvent', [searchVal]);
-
-
-            //creates new collection for results
-
+        enterSearch: function(e) {
+            if(e.keyCode == 13) {
+                var searchVal = $('#search-input').val();
+                //validations
+                if (!searchVal) {
+                    alert("Please enter a search value.")
+                } else if (searchVal == " " || searchVal == "  " || searchVal == "   ") {
+                    alert("Please enter a valid search value.")
+                } else {
+                    //create new model in history collection
+                    this.history.create({name: searchVal});
+                    //triggers event in history subview
+                    this.historyView.trigger('newSearchDone');
+                    //trigger search event in main view to request data
+                    this.trigger('searchEvent', [searchVal]);
+                }
+            }
         }
 
     });
