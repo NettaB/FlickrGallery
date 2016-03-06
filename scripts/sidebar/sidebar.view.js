@@ -1,14 +1,18 @@
 /**
  * Created by Netta.bondy on 28/02/2016.
  */
-define(['jquery', 'backbone', 'history.collection', 'history.view'],
-    function($, Backbone, HistoryCollection, HistoryView){
+define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
+    'text!sidebar/tmpl/sidebar.tmpl.html'],
+    function($, Backbone, Dot, HistoryCollection, HistoryView, SidebarTmpl){
 
     return Backbone.View.extend({
         el: 'aside',
 
         initialize: function(){
             console.log('Sidebar view says hello world!');
+
+            this.render();
+
             //init collection
             this.history = new HistoryCollection;
 
@@ -19,11 +23,18 @@ define(['jquery', 'backbone', 'history.collection', 'history.view'],
             this.on('openView', this.onOpenView);
         },
 
+        render: function() {
+            var sidebarTemplate = Dot.template(SidebarTmpl);
+            this.$el.html(sidebarTemplate);
+
+        },
+
         events: {
             //handles close click
             'click .fn-click-close': 'clickClose',
             //handles search click
             'click #search-btn': 'doSearch'
+            //'click '
         },
 
         //opens sidebar menu

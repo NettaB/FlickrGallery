@@ -9,7 +9,7 @@ define(['jquery', 'backbone', 'dot', 'text!photo/tmpl/photo.view.template.html']
         initialize: function(){
             console.log('Photo view says hello world!');
 
-            this.render();
+            this.on('collectionFull', this.render, this)
         },
 
         render: function(){

@@ -11,6 +11,8 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.flickrService = new FlickrService;
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
+            this.emptyPhotoView = new PhotoView();
+            this.emptyGalleryView = new GalleryView();
  
             //listens for header button click
             //sends event to sidebarView
@@ -24,15 +26,23 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.sidebarView.trigger('openView');
         },
 
+        //callback function for search btn click
         flickrServiceInit: function(searchVal) {
+            //init collection singleton
             this.flickrService.doSearch(searchVal, function(){
+                //trigger main view event
                 this.trigger('searchIsBack');
             }.bind(this));
 
         },
+
+        //on collection population event
         onSearchIsBack: function(){
             console.log('I know search is done!');
+            //init photoview with collection
             this.photoView = new PhotoView({collection: this.flickrService.flickrServiceCollection});
+            this.photoView.trigger('collectionFull');
+            //init galleryview with collection
             this.galleryView = new GalleryView({collection: this.flickrService.flickrServiceCollection});
         }
 
