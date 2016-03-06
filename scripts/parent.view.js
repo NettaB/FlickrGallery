@@ -28,6 +28,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
         //callback function for search btn click
         flickrServiceInit: function(searchVal) {
+            console.log('searching...');
             //init collection singleton
             this.flickrService.doSearch(searchVal, function(){
                 //trigger main view event

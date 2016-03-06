@@ -45,4 +45,8 @@ header {
     background-color: darkgray;
 }
 
+#empty-photo-section {
+    height: 20em;
+}
+
 /*Gallery*/

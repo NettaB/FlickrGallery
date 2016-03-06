@@ -21,6 +21,7 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
 
             //listens for openSidebar event on parent view
             this.on('openView', this.onOpenView);
+            this.historyView.on('historyItemClicked', this.historySearch, this)
         },
 
         render: function() {
@@ -32,10 +33,8 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
         events: {
             //handles close click
             'click .fn-click-close': 'clickClose',
-            //handles search click
-            'click #search-btn': 'doSearch',
-            //handles search on enter
-            'keyup #search-input': 'enterSearch'
+            //handles search input change
+            'change input': 'doSearch'
         },
 
         //opens sidebar menu
@@ -50,6 +49,7 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
 
         //callback for search click
         doSearch: function() {
+            console.log('search initiated!');
             var searchVal = $('#search-input').val();
             //validations
             if (!searchVal) {
@@ -62,27 +62,15 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
                 //triggers event in history subview
                 this.historyView.trigger('newSearchDone');
                 //trigger search event in main view to request data
+                //console.log(searchVal);
                 this.trigger('searchEvent', [searchVal]);
             }
         },
 
-        enterSearch: function(e) {
-            if(e.keyCode == 13) {
-                var searchVal = $('#search-input').val();
-                //validations
-                if (!searchVal) {
-                    alert("Please enter a search value.")
-                } else if (searchVal == " " || searchVal == "  " || searchVal == "   ") {
-                    alert("Please enter a valid search value.")
-                } else {
-                    //create new model in history collection
-                    this.history.create({name: searchVal});
-                    //triggers event in history subview
-                    this.historyView.trigger('newSearchDone');
-                    //trigger search event in main view to request data
-                    this.trigger('searchEvent', [searchVal]);
-                }
-            }
+        //handels search initiated from history list
+        historySearch: function(clickedText) {
+            var searchVal = String(clickedText);
+            this.trigger('searchEvent', [searchVal]);
         }
 
     });

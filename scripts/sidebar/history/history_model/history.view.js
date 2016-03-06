@@ -1,9 +1,9 @@
 /**
  * Created by Netta.bondy on 01/03/2016.
  */
-define(['backbone', 'dot', 'localStorage', 'history.collection',
+define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
     'text!sidebar/history/tmpl/historyitem.tmpl.html'],
-    function(Backbone, Dot, LocalStorage, HistoryCollection, HistoryItemTemplate){
+    function($, Backbone, Dot, LocalStorage, HistoryCollection, HistoryItemTemplate){
 
     return Backbone.View.extend({
        el: '#history-list',
@@ -34,15 +34,20 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
 
 
             //listens for search event on parent view
-            this.on('newSearchDone', this.onNewSearchDone, this)
+            this.on('newSearchDone', this.onNewSearchDone, this);
+            //this.on('historyItemClicked', this.itemClicked, this);
+        },
+
+        events: {
+            'click .history-items': 'itemClicked'
+
         },
 
 
         render: function() {
-            console.log(this.historyArr);
+            //console.log(this.historyArr);
             var historyDisplay = this.historyArr;
-            console.log(historyDisplay);
-            //slices array to show last 20 results
+            //console.log(historyDisplay);
 
 
             //templating
@@ -60,13 +65,17 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
 
                         //deletes items over 20
                         if(response.length > 20) {
-                            that.history.at(0).destroy();
+                            var difference = response.length - 20;
+                            for (var i = 0; i < difference; i++){
+                                that.history.at(i).destroy();
+
+                            }
                         }
-                        console.log(that.history);
+                        //console.log(that.history);
 
                         //creates array of search terms
-                        for (var i = 0; i < 20; i++){
-                            var prop = that.history.models[i].attributes.name;
+                        for (var j = 0; j < 20; j++){
+                            var prop = that.history.models[j].attributes.name;
                             that.historyArr.unshift(prop);
                         }
 
@@ -76,6 +85,14 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
                     .fail(function (error) {
                         console.log(error);
                 });
+        },
+
+        //handle past search click event
+        itemClicked: function(e) {
+            //extract text
+            var clickedText = $(e.target).text();
+            //alert parent view to init search service
+            this.trigger('historyItemClicked', [clickedText])
         }
     });
 });
