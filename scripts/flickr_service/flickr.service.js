@@ -9,9 +9,9 @@ define(['backbone', 'flickr_service/flickr.service.collection'],
 
                 //fired on search button click
                 doSearch: function(searchVal, callback){
-                    var rootUrl = 'https://api.flickr.com/services/rest?&method=flickr.photos.search&api_key=346c2b5529f2926ea20aad4cc8c689fc&format=json&nojsoncallback=1&sort=relevance&per_page=5&extras=url_q,url_l&text=',
-                    tags = String(searchVal),
-                    fullUrl = rootUrl.concat(tags);
+                    this.rootUrl = 'https://api.flickr.com/services/rest?&method=flickr.photos.search&api_key=0affe632606ef9d2bef8d03065994c47&format=json&nojsoncallback=1&sort=relevance&per_page=5&extras=url_q,url_l&text=';
+                    var tags = String(searchVal),
+                    fullUrl = this.rootUrl.concat(tags);
 
                     //init collection
                     this.flickrServiceCollection = new FlickrServiceCollection(fullUrl);

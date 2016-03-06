@@ -17,7 +17,7 @@ define(['jquery', 'backbone', 'dot', 'text!photo/tmpl/photo.view.template.html']
             var thisPhoto = this.collection.models[0].attributes.url_l;
             console.log(thisPhoto);
             var photoDisplay = Dot.template(PhotoViewTemplate);
-            $('#photo').append(photoDisplay({url:thisPhoto}));
+            $('#photo').empty().append(photoDisplay({url:thisPhoto}));
 
         }
 

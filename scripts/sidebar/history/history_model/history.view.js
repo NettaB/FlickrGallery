@@ -9,18 +9,20 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
        el: '#history-list',
 
         initialize: function(){
-            var that = this,
+            var that = this;
                 //init collection
-                history = new HistoryCollection;
-                //init array for template iteration
-                that.historyArr = [];
-                    //fetch data from local storage
-                    history.fetch()
-                        .done(function(response) {
+            this.history = new HistoryCollection;
 
-                            //creates array of search names
-                            for (var i = 0; i < response.length; i++){
-                                that.historyArr.push(response[i].name);
+                //init array for template iteration
+            this.historyArr = [];
+                    //fetch data from local storage
+                this.history.fetch()
+                    .done(function(response) {
+                        //console.log(that.history.length);
+
+                        //creates array of search names
+                        for (var i = 0; i < response.length; i++){
+                            that.historyArr.unshift(response[i].name);
                             }
 
                             //render
@@ -37,44 +39,43 @@ define(['backbone', 'dot', 'localStorage', 'history.collection',
 
 
         render: function() {
-            var that = this;
+            console.log(this.historyArr);
+            var historyDisplay = this.historyArr;
+            console.log(historyDisplay);
             //slices array to show last 20 results
-            var historyDispArr = [],
-            historyDispLength = that.historyArr.length - 20;
-            if(that.historyArr.length < 21) {
-                historyDispArr = that.historyArr.reverse();
-            } else {
-                historyDispArr = that.historyArr.slice(historyDispLength).reverse()
-            }
+
 
             //templating
             var historyItem = Dot.template(HistoryItemTemplate);
-            $('#history-list-child').empty().append(historyItem({historyDispArr}));
+            $('#history-list-child').empty().append(historyItem({historyDisplay}));
 
-        return this;
         },
 
         //callback for new search event
         onNewSearchDone: function(){
-            var that = this,
-                history = new HistoryCollection;
-            that.historyArr = [];
-            history.fetch()
-                .done(function(response) {
-                    //console.log(response);
-                    //creates array of search terms
-                    for (var i = 0; i < response.length; i++){
-                        that.historyArr.push(response[i].name);
-                    }
+            var that = this;
+                this.historyArr = [];
+                this.history.fetch()
+                    .done(function(response) {
 
-                    //render
-                    that.render();
+                        //deletes items over 20
+                        if(response.length > 20) {
+                            that.history.at(0).destroy();
+                        }
+                        console.log(that.history);
+
+                        //creates array of search terms
+                        for (var i = 0; i < 20; i++){
+                            var prop = that.history.models[i].attributes.name;
+                            that.historyArr.unshift(prop);
+                        }
+
+                        //render
+                        that.render();
                 })
-                .fail(function (error) {
-                    console.log(error);
+                    .fail(function (error) {
+                        console.log(error);
                 });
-
         }
-
     });
 });
