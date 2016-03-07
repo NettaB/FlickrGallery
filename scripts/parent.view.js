@@ -11,8 +11,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.flickrService = new FlickrService;
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
-            this.emptyPhotoView = new PhotoView();
-            this.emptyGalleryView = new GalleryView();
  
             //listens for header button click
             //sends event to sidebarView
@@ -45,6 +43,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.photoView.trigger('collectionFull');
             //init galleryview with collection
             this.galleryView = new GalleryView({collection: this.flickrService.flickrServiceCollection});
+            this.galleryView.trigger('collectionFull')
         }
 
     });

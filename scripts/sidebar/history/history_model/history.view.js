@@ -6,7 +6,7 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
     function($, Backbone, Dot, LocalStorage, HistoryCollection, HistoryItemTemplate){
 
     return Backbone.View.extend({
-       el: '#history-list',
+       el: '#history-section',
 
         initialize: function(){
             var that = this;
@@ -45,14 +45,12 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
 
 
         render: function() {
-            //console.log(this.historyArr);
             var historyDisplay = this.historyArr;
-            //console.log(historyDisplay);
 
 
             //templating
             var historyItem = Dot.template(HistoryItemTemplate);
-            $('#history-list-child').empty().append(historyItem({historyDisplay}));
+            $('#history-list').empty().append(historyItem({historyDisplay}));
 
         },
 
@@ -71,7 +69,6 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
 
                             }
                         }
-                        //console.log(that.history);
 
                         //creates array of search terms
                         for (var j = 0; j < 20; j++){
