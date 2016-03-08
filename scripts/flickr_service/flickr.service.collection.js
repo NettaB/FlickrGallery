@@ -10,10 +10,13 @@ define(['backbone', 'underscore', 'flickr_service/flickr.service.model'],
                 this.url = fullUrl;
 
             },
+            /**
+             * @param {Object} response Response from flickr
+             * @returns {Array|*} Array of photo objects with necessary data - urls, photo sizes and ids
+             */
             parse: function(response) {
                 console.log('Am parsing!');
                 var photoArr = response.photos.photo;
-                //extracts relevant data from response to populate models
                 var newModels = _.map(photoArr, function(item){
                     return {
                         id: item.id,

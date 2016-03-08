@@ -12,19 +12,32 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
  
-            //listens for header button click
-            //sends event to sidebarView
+            /**
+             * @listens openSidebar
+             * sends event to sidebarView
+             */
             this.headerView.on('openSidebar', this.btnClicked, this);
+            /**
+             * @listens searchEvent
+             * initiates flickr service and http request
+             */
             this.sidebarView.on('searchEvent', this.flickrServiceInit, this);
             this.on('searchIsBack', this.onSearchIsBack, this)
         },
 
-        //triggers event on sidebarView
+        /**
+         * triggers event on sidebarView
+         */
         btnClicked: function() {
             this.sidebarView.trigger('openView');
         },
 
-        //callback function for search btn click
+        /**
+         * @function flickrServiceInit
+         * @param searchVal     -value from search input field
+         * passes search term to flickr service
+         * triggers event on request completion
+         */
         flickrServiceInit: function(searchVal) {
             console.log('searching...');
             //init collection singleton
@@ -36,6 +49,11 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
         },
 
         //on collection population event
+        /**
+         * @function onSearchIsBack
+         * inits new photoView and new galleryView
+         * passes collection to views
+         */
         onSearchIsBack: function(){
             console.log('I know search is done!');
             //init photoview with collection

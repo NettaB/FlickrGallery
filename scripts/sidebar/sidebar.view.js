@@ -8,6 +8,12 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
     return Backbone.View.extend({
         el: 'aside',
 
+        /**
+         * @function initialize
+         * calls render for sidebar
+         * initializes history collection
+         * initializes historyView view
+         */
         initialize: function(){
             console.log('Sidebar view says hello world!');
 
@@ -19,17 +25,28 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             //init subview
             this.historyView = new HistoryView();
 
-            //listens for openSidebar event on parent view
+            /**
+             * @listens openView
+             * @listens historyItemClicked
+             */
             this.on('openView', this.onOpenView);
             this.historyView.on('historyItemClicked', this.historySearch, this)
         },
 
+        /**
+         * @function render
+         * renders sidebar
+         */
         render: function() {
             var sidebarTemplate = Dot.template(SidebarTmpl);
             this.$el.html(sidebarTemplate);
 
         },
 
+        /**
+         * @event fn-click-close#click
+         * @event input#change
+         */
         events: {
             //handles close click
             'click .fn-click-close': 'clickClose',
@@ -37,17 +54,25 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             'change input': 'doSearch'
         },
 
-        //opens sidebar menu
+        /**
+         * opens sidebar menu
+         */
         onOpenView: function() {
             this.$el.slideDown();
         },
 
-        //closes sidebar menu
+        /**
+         * closes sidebar menu
+         */
         clickClose: function() {
             this.$el.slideUp();
         },
 
-        //callback for search click
+        /**
+         * @function
+         * executes on search click
+         * adds search terms to collection
+         */
         doSearch: function() {
             console.log('search initiated!');
             var searchVal = $('#search-input').val();
@@ -67,7 +92,11 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             }
         },
 
-        //handels search initiated from history list
+        /**
+         * @function historySearch
+         * @param clickedText       -term from history list that was clicked for search
+         * triggers new search with clicked term
+         */
         historySearch: function(clickedText) {
             var searchVal = String(clickedText);
             this.trigger('searchEvent', [searchVal]);

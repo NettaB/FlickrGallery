@@ -10,13 +10,22 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
 
         initialize: function(){
             var that = this;
-                //init collection
+
+            /**
+             * @property history        -collection
+             */
             this.history = new HistoryCollection;
 
-                //init array for template iteration
+            /**
+             * @property {Array} historyArr
+             */
             this.historyArr = [];
                     //fetch data from local storage
-                this.history.fetch()
+            /**
+             * @returns {Array} historyArr   -populates array
+             * @throws will throw and error and log details if fetch failed
+             */
+            this.history.fetch()
                     .done(function(response) {
                         //console.log(that.history.length);
 
@@ -29,13 +38,14 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
                             that.render();
                         })
                         .fail(function (error) {
-                            console.log(error);
+                            console.error(error);
                         });
 
 
-            //listens for search event on parent view
+            /**
+             * @listens newSearchDone
+             */
             this.on('newSearchDone', this.onNewSearchDone, this);
-            //this.on('historyItemClicked', this.itemClicked, this);
         },
 
         events: {
@@ -46,22 +56,25 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
 
         render: function() {
             var historyDisplay = this.historyArr;
-
-
             //templating
             var historyItem = Dot.template(HistoryItemTemplate);
             $('#history-list').empty().append(historyItem({historyDisplay}));
 
         },
 
-        //callback for new search event
+        /**
+         * @function onNewSearchDone
+         * @throws logs error if fetch fails
+         */
         onNewSearchDone: function(){
             var that = this;
                 this.historyArr = [];
                 this.history.fetch()
                     .done(function(response) {
 
-                        //deletes items over 20
+                        /**
+                         * deletes items over 20
+                         */
                         if(response.length > 20) {
                             var difference = response.length - 20;
                             for (var i = 0; i < difference; i++){
@@ -70,7 +83,9 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
                             }
                         }
 
-                        //creates array of search terms
+                        /**
+                         * creates array of search terms
+                         */
                         for (var j = 0; j < 20; j++){
                             var prop = that.history.models[j].attributes.name;
                             that.historyArr.unshift(prop);
@@ -84,7 +99,10 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
                 });
         },
 
-        //handle past search click event
+        /**
+         * @fires historyView#historyItemClicked
+         * @param e     -search term which was clicked
+         */
         itemClicked: function(e) {
             //extract text
             var clickedText = $(e.target).text();
