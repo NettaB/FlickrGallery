@@ -12,7 +12,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
-            //this.galleryView = new GalleryView();
+            this.galleryView = new GalleryView();
  
             /**
              * @listens openSidebar
@@ -95,12 +95,12 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
 
             //***this will init gallery view. DO NOT DELETE!!***//
-            //if(this.galleryView.collection){
-                //this.galleryView.reset();
-   //         this.galleryView.collection = this.flickrService.flickrServiceCollection;
-      //      } else {
-        ///        this.galleryView.collection = this.flickrService.flickrServiceCollection;
-          //  }
+            if(this.galleryView.collection){
+                this.galleryView.reset();
+                this.galleryView.collection = this.flickrService.flickrServiceCollection;
+            } else {
+                this.galleryView.collection = this.flickrService.flickrServiceCollection;
+            }
             //init galleryview with collection
             this.galleryView = new GalleryView({collection: this.flickrService.flickrServiceCollection});
             this.galleryView.trigger('collectionFull')

@@ -92,8 +92,6 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
             } else {
                 this.trigger('nextPhotoPage')
             }
-
-
         },
 
         /**
