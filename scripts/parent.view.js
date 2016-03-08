@@ -78,7 +78,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             }.bind(this));
         },
 
-
         /**
          * @function onSearchIsBack
          * passes collection to photoView and galleryView
