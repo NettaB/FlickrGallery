@@ -46,7 +46,8 @@ define(['backbone', 'flickr_service/flickr.service.collection'],
                  */
                 setPage: function(pageNo){
                     var newPage = '&page=' + String(pageNo);
-                    this.rootUrl.concat(newPage);
+                    this.rootUrl =  this.rootUrl.concat(newPage);
+
 
                 }
 
