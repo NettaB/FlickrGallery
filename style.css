@@ -31,12 +31,13 @@ header {
 /*Sidebar*/
 #sidebar{
     background-color: lightgray;
-    display: none
+    display: none;
+    height: 70rem
 }
 #favorites-link {
     text-decoration: none;
     font-size: 1.5em;
-    padding: 0.5em 0 0.5em 1em;
+    padding: 0.5em 0 0.3em 1em;
 }
 #favorites-link a:hover {
     text-decoration: none;
@@ -60,11 +61,12 @@ header {
 }
 
 #history-list li{
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
 }
 /*Photo*/
 #photo {
     background-color: darkgray;
+    height: 70rem
 }
 
 #empty-photo-section {
@@ -77,6 +79,14 @@ header {
 
 .image-display {
     display: inline-block;
+    margin-top: 2em
+}
+
+#photo-lg {
+    max-width: 90rem;
+    max-height:65rem;
+    border-radius: 2px;
+
 }
 
 .glyph-link:link {
@@ -128,5 +138,5 @@ header {
 
 .gallery-photo {
     display: inline;
-    margin: 1em;
+    padding: 1em
 }
