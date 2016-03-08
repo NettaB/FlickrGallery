@@ -134,7 +134,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             } else{
                 this.flickrServiceSearch();
             }
-
         }
 
     });
