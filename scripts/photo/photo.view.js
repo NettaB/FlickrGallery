@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
             /**
              * @event nextPhotoPage
              */
-            this.on('nextPhotoPage', this.onNextPhotoPage, this);
+            //this.on('nextPhotoPage', this.onNextPhotoPage, this);
             /**
              * @event collectionFull
              */
@@ -74,8 +74,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         },
 
         events: {
-            'click #right-chevron': 'getNextPhoto',
-            'click #left-chevron': 'getPrevPhoto'
+            'click #photo-right-chevron': 'getNextPhoto',
+            'click #photo-left-chevron': 'getPrevPhoto'
         },
 
         /**
@@ -85,15 +85,13 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         getNextPhoto: function(){
             var maxLength = this.largePhotos.length;
             this.photoCounter +=1;
-            console.log(this.photoCounter);
+            //console.log(this.photoCounter);
 
             if (this.photoCounter < maxLength) {
                 this.render();
             } else {
                 this.trigger('nextPhotoPage')
             }
-
-
         },
 
         /**
@@ -102,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          */
         getPrevPhoto: function(){
             this.photoCounter -=1;
-            console.log(this.photoCounter);
+            //console.log(this.photoCounter);
             if(this.photoCounter > 0) {
                 this.render();
             } else {
@@ -116,7 +114,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          */
         alertFirstPhoto: function() {
             var photoEmpty = Dot.template(PhotoViewEmpty);
-            this.$('.image-display').empty().append(photoEmpty)
+            this.$('.image-display').empty().prepend(photoEmpty)
         }
 
     });

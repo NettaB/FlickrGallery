@@ -2,8 +2,8 @@
  * Created by Netta.bondy on 29/02/2016.
  */
 define(['jquery', 'underscore','backbone', 'dot',
-    'text!gallery/tmpl/gallery.view.template.html'],
-    function($, _, Backbone, Dot, GalleryViewTemplate){
+    'text!gallery/tmpl/gallery.view.template.html', 'text!gallery/tmpl/gallery.empty.tmpl.html'],
+    function($, _, Backbone, Dot, GalleryViewTemplate, GalleryViewEmpty){
 
     return Backbone.View.extend({
         el: '#gallery',
@@ -13,65 +13,99 @@ define(['jquery', 'underscore','backbone', 'dot',
          */
         initialize: function(){
             console.log('Gallery view says hello world!');
-            this.photoCounter = 0;
-            console.log(this.photoCounter);
-            this.smallPhotos = [];
             this.galleryDisplay = Dot.template(GalleryViewTemplate);
 
-            console.log('gallery view is rendered');
+            this.on('collectionFull', this.setArray, this)
+        },
 
-            var sortLargePhotos =  function(modelObject){
-                if (modelObject.attributes.url_l &&  modelObject.attributes.url_t){
-                    return modelObject.attributes.url_t;
-                }
-            };
-            var smallPhotosTemp = _.map(this.collection.models, sortLargePhotos);
+        render: function(a){
+            this.$el.empty().append(this.galleryDisplay({a}));
+        },
 
-            for (var i = 0; i < 20; i++){
-                if (smallPhotosTemp[i] !== undefined) {
-                    this.smallPhotos.push(smallPhotosTemp[i])
+        events: {
+            'click #right-chevron': 'getNextGallery',
+            'click #left-chevron': 'getPrevGallery'
+        },
+
+        setArray: function() {
+            this.galleryCounter = 0;
+            /*this.galleryCounter = 9;*/
+            console.info("this is the gallery counter");
+            console.log(this.galleryCounter);
+            this.smallPhotosArr = [];
+            this.galleriesArr = [];
+
+            var currentModels = this.collection.models;
+            console.log(currentModels.length);
+
+            /**
+             * populates smallPhotoArr
+             */
+            for( var j = 0; j < currentModels.length; j++) {
+                if (currentModels[j].attributes.url_l &&  currentModels[j].attributes.url_t){
+                    this.smallPhotosArr.push(currentModels[j]);
                 }
             }
 
-            this.render();
+            console.info("this is the small photos array length");
+            //console.log(this.smallPhotosArr);
+            console.log(this.smallPhotosArr.length);
 
-            //this.on('collectionFull', this.populateGallery, this)
+            /**
+             *populates galleriesArr with sub-arrays to display
+             */
+            var arrayLength = this.smallPhotosArr.length;
+            var arrayNum = Math.floor(arrayLength/9);
+            var arrayLeftover = arrayLength%9;
+            var arrayCounter = 0;
+            console.log(arrayNum);
+            console.log(arrayLeftover);
+
+            for (var i = 0; i < arrayNum; i++) {
+                var arrayEdge = (i+1) * 9;
+                var tempArr = this.smallPhotosArr.slice(arrayCounter, arrayEdge);
+                this.galleriesArr.push(tempArr);
+                arrayCounter += 9
+            }
+            console.log(this.galleriesArr.length);
+
+            var lastTempArr = this.smallPhotosArr.slice (arrayLength - 9, arrayLength);
+            this.galleriesArr.push(lastTempArr);
+            console.info(this.galleriesArr.length);
+
+            this.render(this.galleriesArr[this.galleryCounter]);
+            console.log(this.galleriesArr);
 
         },
 
-        render: function(){
-            var smallPhotoArr = this.smallPhotos.slice(0,5);
-            this.$el.empty().append(this.galleryDisplay({
-                smallPhotoArr}));
+        getNextGallery: function() {
+            var maxLength = this.galleriesArr.length;
+            console.info(maxLength);
+            this.galleryCounter += 1;
+            if (this.galleryCounter < maxLength) {
+                console.log(this.galleryCounter);
+                this.render(this.galleriesArr[this.galleryCounter]);
+            } else {
+                this.trigger('nextPhotoPage')
+            }
+        },
+
+        getPrevGallery: function() {
+            //var prevPhoto = this.galleryCounter - 10;
+            if (this.galleryCounter > 0) {
+                this.galleryCounter -= 1;
+                console.log(this.galleryCounter);
+                this.render(this.galleriesArr[this.galleryCounter]);
+            } else {
+                this.trigger('prevPhotoPage')
+            }
+        },
+
+        alertFirstPhoto: function() {
+            console.log('gallery knows its empty');
+            var galleryEmpty = Dot.template(GalleryViewEmpty);
+            this.$('#gallery-display').empty().prepend(galleryEmpty)
         }
-
-        //populateGallery: function() {
-            //render photo view on collection creation.
-            //triggered from Parent View
-
-
-            //sort urls into array,
-            //excluding ones that don't have a large or small url
-
-
-            //test
-            //console.log(largePhotosTemp);
-            //console.log(largePhotosTemp.length);
-            //end test
-
-            //remove undefined from array
-
-
-            //test
-            //console.log("final array");
-            //console.log(this.largePhotos);
-            //test end
-
-            //render first photo
-
-            //console.log(this.photoCounter);
-            //return this.largePhotos
-        //}
 
     });
 });

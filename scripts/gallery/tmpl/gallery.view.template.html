@@ -1,6 +1,16 @@
 
-<div class="col-md-8 col-md-offset-2">
-    {{~it.smallPhotoArr :value:index}}
-    <img class="gallery-photo" src={{=value}}/>
+<div class="pull-left col-md-1 chevron-div">
+    <a class="left glyph-link" id="left-chevron" href="#">
+        <
+    </a>
+</div>
+<div class="col-md-10" id="gallery-display">
+    {{~it.a :value:index}}
+    <img class="gallery-photo" src="{{=value.attributes.url_t}}"/>
     {{~}}
+</div>
+<div class="pull-right chevron-div">
+    <a class="right glyph-link" id="right-chevron" href="#">
+        >
+    </a>
 </div>
