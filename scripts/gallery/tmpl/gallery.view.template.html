@@ -6,10 +6,10 @@
 </div>
 <div class="col-md-10" id="gallery-display">
     {{~it.a :value:index}}
-    <img class="gallery-photo" src={{=value}}/>
+    <img class="gallery-photo" src="{{=value.attributes.url_t}}"/>
     {{~}}
 </div>
-<div class="pull-right col-md-1 chevron-div">
+<div class="pull-right chevron-div">
     <a class="right glyph-link" id="right-chevron" href="#">
         >
     </a>

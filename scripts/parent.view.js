@@ -75,7 +75,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
         flickrServiceSearch: function() {
             if (this.flickrPageCounter)
             this.flickrService.setPage (this.flickrPageCounter);
-            console.log(this.flickrService.rootUrl);
+            //console.log(this.flickrService.rootUrl);
             this.flickrService.doSearch(this.query, function(){
                 //trigger main view event
                 this.trigger('searchIsBack');
@@ -87,7 +87,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * passes collection to photoView and galleryView
          */
         onSearchIsBack: function(){
-            console.log('I know search is done!');
+            //console.log('I know search is done!');
 
             if (this.photoView.collection){
                 this.photoView.collection.reset();

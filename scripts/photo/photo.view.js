@@ -74,8 +74,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         },
 
         events: {
-            'click #right-chevron': 'getNextPhoto',
-            'click #left-chevron': 'getPrevPhoto'
+            'click #photo-right-chevron': 'getNextPhoto',
+            'click #photo-left-chevron': 'getPrevPhoto'
         },
 
         /**
@@ -114,7 +114,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          */
         alertFirstPhoto: function() {
             var photoEmpty = Dot.template(PhotoViewEmpty);
-            this.$('.image-display').empty().append(photoEmpty)
+            this.$('.image-display').empty().prepend(photoEmpty)
         }
 
     });
