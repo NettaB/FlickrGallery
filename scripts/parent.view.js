@@ -34,14 +34,18 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             /**
              * @listens nextPhotoPage
              * sends http request when photo view needs next page
+             * sends http request when gallery view needs next page
              */
             this.photoView.on('nextPhotoPage', this.getNextPage, this);
+            this.galleryView.on('nextPhotoPage', this.getNextPage, this);
 
             /**
              * @listens prevPhotoPage
              * sends http request when phot view needs previous page
              */
-            this.photoView.on('prevPhotoPage', this.getPrevPage, this)
+            this.photoView.on('prevPhotoPage', this.getPrevPage, this);
+
+            this.galleryView.on('prevPhotoPage', this.getPrevPage, this)
         },
 
         /**
@@ -96,13 +100,12 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
             //***this will init gallery view. DO NOT DELETE!!***//
             if(this.galleryView.collection){
-                this.galleryView.reset();
+                this.galleryView.collection.reset();
                 this.galleryView.collection = this.flickrService.flickrServiceCollection;
             } else {
                 this.galleryView.collection = this.flickrService.flickrServiceCollection;
             }
             //init galleryview with collection
-            this.galleryView = new GalleryView({collection: this.flickrService.flickrServiceCollection});
             this.galleryView.trigger('collectionFull')
         },
 
@@ -129,8 +132,9 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.flickrPageCounter -=1;
             console.log('I am on page:');
             console.log(this.flickrPageCounter);
-            if(this.flickrPageCounter < 0 ){
+            if(this.flickrPageCounter < 1 ){
                 this.photoView.alertFirstPhoto();
+                this.galleryView.alertFirstPhoto();
             } else{
                 this.flickrServiceSearch();
             }

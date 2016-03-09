@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
             /**
              * @event nextPhotoPage
              */
-            this.on('nextPhotoPage', this.onNextPhotoPage, this);
+            //this.on('nextPhotoPage', this.onNextPhotoPage, this);
             /**
              * @event collectionFull
              */
@@ -85,7 +85,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         getNextPhoto: function(){
             var maxLength = this.largePhotos.length;
             this.photoCounter +=1;
-            console.log(this.photoCounter);
+            //console.log(this.photoCounter);
 
             if (this.photoCounter < maxLength) {
                 this.render();
@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          */
         getPrevPhoto: function(){
             this.photoCounter -=1;
-            console.log(this.photoCounter);
+            //console.log(this.photoCounter);
             if(this.photoCounter > 0) {
                 this.render();
             } else {

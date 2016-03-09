@@ -2,8 +2,8 @@
  * Created by Netta.bondy on 29/02/2016.
  */
 define(['jquery', 'underscore','backbone', 'dot',
-    'text!gallery/tmpl/gallery.view.template.html'],
-    function($, _, Backbone, Dot, GalleryViewTemplate){
+    'text!gallery/tmpl/gallery.view.template.html', 'text!gallery/tmpl/gallery.empty.tmpl.html'],
+    function($, _, Backbone, Dot, GalleryViewTemplate, GalleryViewEmpty){
 
     return Backbone.View.extend({
         el: '#gallery',
@@ -19,13 +19,18 @@ define(['jquery', 'underscore','backbone', 'dot',
         },
 
         render: function(){
-            var smallPhotoArr = this.smallPhotos.slice(0,9);
-            this.$el.empty().append(this.galleryDisplay({
-                smallPhotoArr}));
+            var a = this.smallPhotoArr;
+            this.$el.empty().append(this.galleryDisplay({a}));
+        },
+
+        events: {
+            'click #right-chevron': 'getNextPhoto',
+            'click #left-chevron': 'getPrevPhoto'
+
         },
 
         setArray: function() {
-            this.galleryCounter = 0;
+            this.galleryCounter = 9;
             console.log("this is the gallery counter");
             console.log(this.galleryCounter);
             this.smallPhotos = [];
@@ -42,9 +47,40 @@ define(['jquery', 'underscore','backbone', 'dot',
                     this.smallPhotos.push(smallPhotosTemp[i])
                 }
             }
-
+            this.smallPhotoArr = this.smallPhotos.slice(0,9);
             this.render();
+        },
 
+        getNextPhoto: function() {
+            var maxLength = this.smallPhotos.length;
+            if (this.galleryCounter < maxLength) {
+                this.smallPhotoArr.shift();
+                this.smallPhotoArr.push(this.smallPhotos[this.galleryCounter]);
+                this.galleryCounter += 1;
+                console.log(this.galleryCounter);
+                this.render();
+            } else {
+                this.trigger('nextPhotoPage')
+            }
+        },
+
+        getPrevPhoto: function() {
+            var prevPhoto = this.galleryCounter - 10;
+            if (this.galleryCounter > 9) {
+                this.smallPhotoArr.pop();
+                this.smallPhotoArr.unshift(this.smallPhotos[prevPhoto]);
+                this.galleryCounter -= 1;
+                console.log(this.galleryCounter);
+                this.render();
+            } else {
+                this.trigger('prevPhotoPage')
+            }
+        },
+
+        alertFirstPhoto: function() {
+            console.log('gallery knows its empty')
+            var galleryEmpty = Dot.template(GalleryViewEmpty);
+            this.$('#gallery-display').empty().prepend(galleryEmpty)
         }
 
 
