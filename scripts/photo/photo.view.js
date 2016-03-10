@@ -1,9 +1,9 @@
 /**
  * Created by Netta.bondy on 29/02/2016.
  */
-define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.template.html',
+define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'text!photo/tmpl/photo.view.template.html',
 'text!photo/tmpl/photo.empty.tmpl.html'],
-    function($, _, Backbone, Dot, PhotoViewTemplate, PhotoViewEmpty){
+    function($, _, Backbone, Dot, PhotoCollection, PhotoViewTemplate, PhotoViewEmpty){
 
         /**
          * @property {object} photoCounter      -counts clicks to navigate photos
@@ -21,6 +21,10 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
             console.log('Photo view says hello world!');
 
             this.photoDisplay = Dot.template(PhotoViewTemplate);
+
+            this.collection = new PhotoCollection;
+
+            this.photoCounter = 0;
 
             /**
              * @event nextPhotoPage
@@ -48,9 +52,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          * executes render
          */
         setArray: function() {
-            this.photoCounter = 0;
             console.log("this is the photo counter");
-            console.info(this.photoCounter);
+            console.log(this.photoCounter);
             this.largePhotos = [];
 
             var currentModels = this.collection.models;
@@ -61,8 +64,9 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
                 }
             }
 
+            console.log(this.largePhotos);
             var currentPhoto = this.largePhotos[this.photoCounter];
-
+            console.log(currentPhoto);
             this.render(currentPhoto);
         },
 

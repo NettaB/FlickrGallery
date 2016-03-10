@@ -93,23 +93,19 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * passes collection to photoView and galleryView
          */
         onSearchIsBack: function(){
-            //console.log('I know search is done!');
 
-            if (this.photoView.collection){
-                this.photoView.collection.reset();
-                this.photoView.collection = this.flickrService.flickrServiceCollection;
-            } else {
-                this.photoView.collection = this.flickrService.flickrServiceCollection
-            }
+            this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
+
             this.photoView.trigger('collectionFull');
-
 
             //***this will init gallery view. DO NOT DELETE!!***//
             if(this.galleryView.collection){
                 this.galleryView.collection.reset();
                 this.galleryView.collection = this.flickrService.flickrServiceCollection;
+                //console.info(this.galleryView.collection);
             } else {
                 this.galleryView.collection = this.flickrService.flickrServiceCollection;
+                //console.log(this.galleryView.collection);
             }
             //init galleryview with collection
             this.galleryView.trigger('collectionFull')

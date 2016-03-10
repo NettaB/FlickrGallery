@@ -36,8 +36,8 @@ define(['jquery', 'underscore','backbone', 'dot',
          */
         setArray: function() {
             this.galleryCounter = 0;
-            console.log("this is the gallery counter");
-            console.info(this.galleryCounter);
+            //console.log("this is the gallery counter");
+            //console.info(this.galleryCounter);
             this.smallPhotosArr = [];
             this.galleriesArr = [];
 
@@ -59,8 +59,8 @@ define(['jquery', 'underscore','backbone', 'dot',
             var arrayNum = Math.floor(arrayLength/9);
             var arrayLeftover = arrayLength%9;
             var arrayCounter = 0;
-            console.log(arrayNum);
-            console.log(arrayLeftover);
+            //console.log(arrayNum);
+            //console.log(arrayLeftover);
 
             for (var i = 0; i < arrayNum; i++) {
                 var arrayEdge = (i+1) * 9;
@@ -68,11 +68,11 @@ define(['jquery', 'underscore','backbone', 'dot',
                 this.galleriesArr.push(tempArr);
                 arrayCounter += 9
             }
-            console.log(this.galleriesArr.length);
+            //console.log(this.galleriesArr.length);
 
             var lastTempArr = this.smallPhotosArr.slice (arrayLength - 9, arrayLength);
             this.galleriesArr.push(lastTempArr);
-            console.info(this.galleriesArr.length);
+            //console.info(this.galleriesArr.length);
 
             this.render(this.galleriesArr[this.galleryCounter]);
 
@@ -84,11 +84,11 @@ define(['jquery', 'underscore','backbone', 'dot',
          */
         getNextGallery: function() {
             var maxLength = this.galleriesArr.length;
-            console.info(maxLength);
+            //console.info(maxLength);
             this.galleryCounter += 1;
-            console.info(this.galleryCounter);
+            //console.info(this.galleryCounter);
             if (this.galleryCounter < maxLength) {
-                console.log(this.galleryCounter);
+                //console.log(this.galleryCounter);
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
                 this.trigger('nextPhotoPage')
@@ -103,7 +103,7 @@ define(['jquery', 'underscore','backbone', 'dot',
             //var prevPhoto = this.galleryCounter - 10;
             this.galleryCounter -= 1;
             if (this.galleryCounter > 0) {
-                console.log(this.galleryCounter);
+                //console.log(this.galleryCounter);
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
                 this.trigger('prevPhotoPage')
@@ -114,7 +114,6 @@ define(['jquery', 'underscore','backbone', 'dot',
          * executes when there are no more photos to display
          */
         alertFirstPhoto: function() {
-            console.log('gallery knows its empty');
             var galleryEmpty = Dot.template(GalleryViewEmpty);
             this.$('#gallery-display').empty().prepend(galleryEmpty);
         },
@@ -128,6 +127,8 @@ define(['jquery', 'underscore','backbone', 'dot',
          * @param e  -target of event
          */
         setPhotoDisplay: function(e) {
+            $(e.target).siblings().removeClass("gallery-clicked");
+            $(e.target).addClass("gallery-clicked");
             var clickedID = $(e.target).context.id;
             //console.log(clickedID);
             this.trigger('gallerySetsPhoto', clickedID);

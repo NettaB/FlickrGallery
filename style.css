@@ -166,3 +166,7 @@ header {
 #right-chevron {
     margin-right: 1em
 }
+
+.gallery-clicked {
+    border: white 1px solid;
+}
