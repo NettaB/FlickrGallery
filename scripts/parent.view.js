@@ -44,8 +44,14 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
              * sends http request when phot view needs previous page
              */
             this.photoView.on('prevPhotoPage', this.getPrevPage, this);
+            this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
 
-            this.galleryView.on('prevPhotoPage', this.getPrevPage, this)
+
+            /**
+             * @listens gallerySetsPhoto
+             * executes setPhoto
+             */
+            this.galleryView.on('gallerySetsPhoto', this.setPhoto, this);
         },
 
         /**
@@ -138,6 +144,15 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             } else{
                 this.flickrServiceSearch();
             }
+        },
+
+        /**
+         * @function SetPhoto
+         * passes id from galleryView to photoView
+         * @param {string} clickedID  -id passed from galleryView
+         */
+        setPhoto: function(clickedID) {
+            this.photoView.gallerySetView(clickedID);
         }
 
     });

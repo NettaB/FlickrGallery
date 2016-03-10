@@ -37,9 +37,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          * @function render
          * renders view with url from position matching photoCounter
          */
-        render: function(){
-            this.$el.empty().append(this.photoDisplay({
-                url:this.largePhotos[this.photoCounter]}));
+        render: function(currentPhoto){
+            this.$el.empty().append(this.photoDisplay(currentPhoto));
 
         },
 
@@ -49,28 +48,22 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
          * executes render
          */
         setArray: function() {
-
             this.photoCounter = 0;
-            console.log(this.photoCounter);
+            console.log("this is the photo counter");
+            console.info(this.photoCounter);
             this.largePhotos = [];
-            //console.log('photo view is rendered');
-            var sortLargePhotos =  function(modelObject){
-                if (modelObject.attributes.url_l &&  modelObject.attributes.url_t){
-                    return modelObject.attributes.url_l;
-                }
-            };
 
-            //creates new temporary array for photos with urls
-            var largePhotosTemp = _.map(this.collection.models, sortLargePhotos);
+            var currentModels = this.collection.models;
 
-            //creates new array of urls for large photos
-            for (var i = 0; i < 20; i++){
-                if (largePhotosTemp[i] !== undefined) {
-                    this.largePhotos.push(largePhotosTemp[i])
+            for (var i = 0; i < currentModels.length; i++){
+                if(currentModels[i].attributes.url_l && currentModels[i].attributes.url_t){
+                    this.largePhotos.push(currentModels[i]);
                 }
             }
 
-            this.render();
+            var currentPhoto = this.largePhotos[this.photoCounter];
+
+            this.render(currentPhoto);
         },
 
         events: {
@@ -88,7 +81,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
             //console.log(this.photoCounter);
 
             if (this.photoCounter < maxLength) {
-                this.render();
+                var currentPhoto = this.largePhotos[this.photoCounter];
+                this.render(currentPhoto);
             } else {
                 this.trigger('nextPhotoPage')
             }
@@ -101,8 +95,9 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         getPrevPhoto: function(){
             this.photoCounter -=1;
             //console.log(this.photoCounter);
-            if(this.photoCounter > 0) {
-                this.render();
+            if(this.photoCounter >= 0) {
+                var currentPhoto = this.largePhotos[this.photoCounter];
+                this.render(currentPhoto);
             } else {
                 this.trigger('prevPhotoPage')
             }
@@ -115,6 +110,19 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'text!photo/tmpl/photo.view.t
         alertFirstPhoto: function() {
             var photoEmpty = Dot.template(PhotoViewEmpty);
             this.$('.image-display').empty().prepend(photoEmpty)
+        },
+
+            /**
+             * @function gallerySetView
+             * retrieves photo url based on id string passed from parentView
+             * renders url for current photo.
+             * @param a {string}  -the id string passed from parent view
+             */
+        gallerySetView: function(a){
+            //console.log(this.collection);
+            var currentPhoto = this.collection.findWhere({id:a});
+            //console.info(currentPhoto);
+            this.render(currentPhoto);
         }
 
     });

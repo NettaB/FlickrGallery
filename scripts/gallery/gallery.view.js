@@ -24,32 +24,33 @@ define(['jquery', 'underscore','backbone', 'dot',
 
         events: {
             'click #right-chevron': 'getNextGallery',
-            'click #left-chevron': 'getPrevGallery'
+            'click #left-chevron': 'getPrevGallery',
+            'click .gallery-photo': 'setPhotoDisplay'
         },
 
+        /**
+         * @function setArray
+         * populates the array to be iterated over
+         * calls render
+         * returns this.galleriesArr
+         */
         setArray: function() {
             this.galleryCounter = 0;
-            /*this.galleryCounter = 9;*/
-            console.info("this is the gallery counter");
-            console.log(this.galleryCounter);
+            console.log("this is the gallery counter");
+            console.info(this.galleryCounter);
             this.smallPhotosArr = [];
             this.galleriesArr = [];
 
             var currentModels = this.collection.models;
-            console.log(currentModels.length);
 
             /**
-             * populates smallPhotoArr
+             * populates temporary array of models
              */
             for( var j = 0; j < currentModels.length; j++) {
                 if (currentModels[j].attributes.url_l &&  currentModels[j].attributes.url_t){
                     this.smallPhotosArr.push(currentModels[j]);
                 }
             }
-
-            console.info("this is the small photos array length");
-            //console.log(this.smallPhotosArr);
-            console.log(this.smallPhotosArr.length);
 
             /**
              *populates galleriesArr with sub-arrays to display
@@ -74,14 +75,18 @@ define(['jquery', 'underscore','backbone', 'dot',
             console.info(this.galleriesArr.length);
 
             this.render(this.galleriesArr[this.galleryCounter]);
-            console.log(this.galleriesArr);
 
         },
 
+        /**
+         * sets new array to display on forwards click
+         * triggers new http call on parent view when array is done
+         */
         getNextGallery: function() {
             var maxLength = this.galleriesArr.length;
             console.info(maxLength);
             this.galleryCounter += 1;
+            console.info(this.galleryCounter);
             if (this.galleryCounter < maxLength) {
                 console.log(this.galleryCounter);
                 this.render(this.galleriesArr[this.galleryCounter]);
@@ -90,10 +95,14 @@ define(['jquery', 'underscore','backbone', 'dot',
             }
         },
 
+        /**
+         * sets new array to display on backwards click
+         * triggers new http call on parent view when array is done
+         */
         getPrevGallery: function() {
             //var prevPhoto = this.galleryCounter - 10;
+            this.galleryCounter -= 1;
             if (this.galleryCounter > 0) {
-                this.galleryCounter -= 1;
                 console.log(this.galleryCounter);
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
@@ -101,10 +110,28 @@ define(['jquery', 'underscore','backbone', 'dot',
             }
         },
 
+        /**
+         * executes when there are no more photos to display
+         */
         alertFirstPhoto: function() {
             console.log('gallery knows its empty');
             var galleryEmpty = Dot.template(GalleryViewEmpty);
-            this.$('#gallery-display').empty().prepend(galleryEmpty)
+            this.$('#gallery-display').empty().prepend(galleryEmpty);
+        },
+
+
+        /**
+         * @function setPhotoDisplay
+         * retrieves id of clicked photo
+         * passes id to parentView
+         * @triggers parentView:gallerySetsPhoto
+         * @param e  -target of event
+         */
+        setPhotoDisplay: function(e) {
+            var clickedID = $(e.target).context.id;
+            //console.log(clickedID);
+            this.trigger('gallerySetsPhoto', clickedID);
+
         }
 
     });
