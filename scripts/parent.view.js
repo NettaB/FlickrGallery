@@ -8,7 +8,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
     var theMainView = Backbone.View.extend({
 
         initialize: function() {
-            this.flickrService = new FlickrService;
+            this.flickrService = new FlickrService('0affe632606ef9d2bef8d03065994c47');
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
@@ -43,8 +43,8 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
              * @listens prevPhotoPage
              * sends http request when phot view needs previous page
              */
-            this.photoView.on('prevPhotoPage', this.getPrevPage, this);
-            this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
+            //this.photoView.on('prevPhotoPage', this.getPrevPage, this);
+            //this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
 
 
             /**
@@ -79,6 +79,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * triggers service search method
          */
         flickrServiceSearch: function() {
+            console.log("I\'m here");
             if (this.flickrPageCounter)
             this.flickrService.setPage (this.flickrPageCounter);
             //console.log(this.flickrService.rootUrl);
@@ -95,20 +96,14 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
         onSearchIsBack: function(){
 
             this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
+            console.log(this.photoView.collection);
 
             this.photoView.trigger('collectionFull');
 
-            //***this will init gallery view. DO NOT DELETE!!***//
-            if(this.galleryView.collection){
-                this.galleryView.collection.reset();
-                this.galleryView.collection = this.flickrService.flickrServiceCollection;
-                //console.info(this.galleryView.collection);
-            } else {
-                this.galleryView.collection = this.flickrService.flickrServiceCollection;
-                //console.log(this.galleryView.collection);
-            }
-            //init galleryview with collection
+            this.galleryView.collection.add(this.flickrService.flickrServiceCollection.models);
+
             this.galleryView.trigger('collectionFull')
+
         },
 
         /**
@@ -117,29 +112,11 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         getNextPage: function() {
-            console.log('I need the next page');
+            //console.log('I need the next page');
             this.flickrPageCounter +=1;
-            console.log('I am on page:');
-            console.log(this.flickrPageCounter);
+            //console.log('I am on page:');
+            //console.log(this.flickrPageCounter);
             this.flickrServiceSearch();
-        },
-
-        /**
-         * @function goPrevPage
-         * sets page number to retrieve from flickr
-         * executes search
-         */
-        getPrevPage: function() {
-            console.log('I need the previous page');
-            this.flickrPageCounter -=1;
-            console.log('I am on page:');
-            console.log(this.flickrPageCounter);
-            if(this.flickrPageCounter < 1 ){
-                this.photoView.alertFirstPhoto();
-                this.galleryView.alertFirstPhoto();
-            } else{
-                this.flickrServiceSearch();
-            }
         },
 
         /**

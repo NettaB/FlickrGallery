@@ -75,7 +75,8 @@ header {
 
 .image-display {
     display: inline-block;
-    margin: 2em 2em 0 2em
+    margin-top: 2em;
+    margin-left: 10.5em;
 }
 
 #photo-lg {

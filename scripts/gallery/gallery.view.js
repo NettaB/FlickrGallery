@@ -1,9 +1,9 @@
 /**
  * Created by Netta.bondy on 29/02/2016.
  */
-define(['jquery', 'underscore','backbone', 'dot',
+define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
     'text!gallery/tmpl/gallery.view.template.html', 'text!gallery/tmpl/gallery.empty.tmpl.html'],
-    function($, _, Backbone, Dot, GalleryViewTemplate, GalleryViewEmpty){
+    function($, _, Backbone, Dot, GalleryCollection, GalleryViewTemplate, GalleryViewEmpty){
 
     return Backbone.View.extend({
         el: '#gallery',
@@ -14,6 +14,8 @@ define(['jquery', 'underscore','backbone', 'dot',
         initialize: function(){
             console.log('Gallery view says hello world!');
             this.galleryDisplay = Dot.template(GalleryViewTemplate);
+            this.collection = new GalleryCollection;
+            this.galleryCounter = 0;
 
             this.on('collectionFull', this.setArray, this)
         },
@@ -35,9 +37,6 @@ define(['jquery', 'underscore','backbone', 'dot',
          * returns this.galleriesArr
          */
         setArray: function() {
-            this.galleryCounter = 0;
-            //console.log("this is the gallery counter");
-            //console.info(this.galleryCounter);
             this.smallPhotosArr = [];
             this.galleriesArr = [];
 
@@ -56,23 +55,21 @@ define(['jquery', 'underscore','backbone', 'dot',
              *populates galleriesArr with sub-arrays to display
              */
             var arrayLength = this.smallPhotosArr.length;
-            var arrayNum = Math.floor(arrayLength/9);
-            var arrayLeftover = arrayLength%9;
-            var arrayCounter = 0;
-            //console.log(arrayNum);
-            //console.log(arrayLeftover);
+            var repeats = Math.floor(arrayLength/9);
+            var leftover = arrayLength%9;
+            var arrayEdge = 9;
 
-            for (var i = 0; i < arrayNum; i++) {
-                var arrayEdge = (i+1) * 9;
-                var tempArr = this.smallPhotosArr.slice(arrayCounter, arrayEdge);
+            for (var i = 0; i < repeats; i++) {
+                var localStart = i * 9;
+                var tempArr = this.smallPhotosArr.slice(localStart, arrayEdge);
                 this.galleriesArr.push(tempArr);
-                arrayCounter += 9
+                arrayEdge +=9
             }
-            //console.log(this.galleriesArr.length);
 
-            var lastTempArr = this.smallPhotosArr.slice (arrayLength - 9, arrayLength);
-            this.galleriesArr.push(lastTempArr);
-            //console.info(this.galleriesArr.length);
+            if (leftover != 0) {
+                var lastTempArr = this.smallPhotosArr.slice(arrayLength - 9, arrayLength);
+                    this.galleriesArr.push(lastTempArr)
+                }
 
             this.render(this.galleriesArr[this.galleryCounter]);
 
@@ -84,11 +81,8 @@ define(['jquery', 'underscore','backbone', 'dot',
          */
         getNextGallery: function() {
             var maxLength = this.galleriesArr.length;
-            //console.info(maxLength);
             this.galleryCounter += 1;
-            //console.info(this.galleryCounter);
             if (this.galleryCounter < maxLength) {
-                //console.log(this.galleryCounter);
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
                 this.trigger('nextPhotoPage')
@@ -100,24 +94,15 @@ define(['jquery', 'underscore','backbone', 'dot',
          * triggers new http call on parent view when array is done
          */
         getPrevGallery: function() {
-            //var prevPhoto = this.galleryCounter - 10;
             this.galleryCounter -= 1;
-            if (this.galleryCounter > 0) {
-                //console.log(this.galleryCounter);
+            if (this.galleryCounter >= 0) {
+
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
-                this.trigger('prevPhotoPage')
+                var galleryEmpty = Dot.template(GalleryViewEmpty);
+                this.$('#gallery-display').empty().prepend(galleryEmpty);
             }
         },
-
-        /**
-         * executes when there are no more photos to display
-         */
-        alertFirstPhoto: function() {
-            var galleryEmpty = Dot.template(GalleryViewEmpty);
-            this.$('#gallery-display').empty().prepend(galleryEmpty);
-        },
-
 
         /**
          * @function setPhotoDisplay
@@ -130,7 +115,7 @@ define(['jquery', 'underscore','backbone', 'dot',
             $(e.target).siblings().removeClass("gallery-clicked");
             $(e.target).addClass("gallery-clicked");
             var clickedID = $(e.target).context.id;
-            //console.log(clickedID);
+
             this.trigger('gallerySetsPhoto', clickedID);
 
         }

@@ -27,10 +27,6 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
             this.photoCounter = 0;
 
             /**
-             * @event nextPhotoPage
-             */
-            //this.on('nextPhotoPage', this.onNextPhotoPage, this);
-            /**
              * @event collectionFull
              */
             this.on('collectionFull', this.setArray, this)
@@ -52,10 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          * executes render
          */
         setArray: function() {
-            console.log("this is the photo counter");
-            console.log(this.photoCounter);
             this.largePhotos = [];
-
             var currentModels = this.collection.models;
 
             for (var i = 0; i < currentModels.length; i++){
@@ -64,9 +57,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
                 }
             }
 
-            console.log(this.largePhotos);
             var currentPhoto = this.largePhotos[this.photoCounter];
-            console.log(currentPhoto);
             this.render(currentPhoto);
         },
 
@@ -82,7 +73,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
         getNextPhoto: function(){
             var maxLength = this.largePhotos.length;
             this.photoCounter +=1;
-            //console.log(this.photoCounter);
+            console.log(this.photoCounter);
 
             if (this.photoCounter < maxLength) {
                 var currentPhoto = this.largePhotos[this.photoCounter];
@@ -98,34 +89,26 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          */
         getPrevPhoto: function(){
             this.photoCounter -=1;
-            //console.log(this.photoCounter);
             if(this.photoCounter >= 0) {
                 var currentPhoto = this.largePhotos[this.photoCounter];
                 this.render(currentPhoto);
             } else {
-                this.trigger('prevPhotoPage')
+                this.trigger('prevPhotoPage');
+                var photoEmpty = Dot.template(PhotoViewEmpty);
+                this.$('.image-display').empty().prepend(photoEmpty)
             }
         },
 
         /**
-         * @function alertFirstPhoto
-         * sets message on reaching first photo
+         * @function gallerySetView
+         * retrieves photo url based on id string passed from parentView
+         * renders url for current photo.
+         * @param a {string}  -the id string passed from parent view
          */
-        alertFirstPhoto: function() {
-            var photoEmpty = Dot.template(PhotoViewEmpty);
-            this.$('.image-display').empty().prepend(photoEmpty)
-        },
-
-            /**
-             * @function gallerySetView
-             * retrieves photo url based on id string passed from parentView
-             * renders url for current photo.
-             * @param a {string}  -the id string passed from parent view
-             */
         gallerySetView: function(a){
-            //console.log(this.collection);
             var currentPhoto = this.collection.findWhere({id:a});
-            //console.info(currentPhoto);
+            this.photoCounter = this.collection.models.indexOf(currentPhoto);
+            console.log(this.photoCounter);
             this.render(currentPhoto);
         }
 
