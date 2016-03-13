@@ -51,7 +51,9 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             //handles close click
             'click .fn-click-close': 'clickClose',
             //handles search input change
-            'change input': 'doSearch'
+            'change input': 'doSearch',
+
+            'click #favorites-link': 'getFavorites'
         },
 
         /**
@@ -75,12 +77,11 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
          */
         doSearch: function() {
             console.log('search initiated!');
-            var searchVal = $('#search-input').val();
+            var searchVal = $('#search-input').val().trim();
+            console.log(searchVal);
             //validations
             if (!searchVal) {
                 alert("Please enter a search value.")
-            } else if (searchVal == " " || searchVal == "  " || searchVal == "   ") {
-                alert("Please enter a valid search value.")
             } else {
                 //create new model in history collection
                 this.history.create({name: searchVal});
@@ -100,6 +101,10 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
         historySearch: function(clickedText) {
             var searchVal = String(clickedText);
             this.trigger('searchEvent', [searchVal]);
+        },
+
+        getFavorites: function() {
+            this.trigger('favoritesClicked')
         }
 
     });

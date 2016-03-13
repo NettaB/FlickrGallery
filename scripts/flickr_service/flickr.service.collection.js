@@ -1,11 +1,11 @@
 /**
  * Created by Netta.bondy on 03/03/2016.
  */
-define(['backbone', 'underscore', 'flickr_service/flickr.service.model'],
-    function(Backbone, _, FlickrServiceModel){
+define(['backbone', 'underscore', 'photo.model'],
+    function(Backbone, _, PhotoModel){
 
         return Backbone.Collection.extend({
-            model: FlickrServiceModel,
+            model: PhotoModel,
             initialize: function(fullUrl) {
                 this.url = fullUrl;
 

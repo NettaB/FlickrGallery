@@ -35,17 +35,18 @@ requirejs.config({
         'history.model': 'sidebar/history/history_model/history.model',
         'history.collection': 'sidebar/history/history_model/history.collection',
         'history.view': 'sidebar/history/history_model/history.view',
-        'flickr.service': 'flickr_service/flickr.service'
+        'flickr.service': 'flickr_service/flickr.service',
+        'photo.model': 'flickr_service/flickr.service.model'
     }
 });
 
 requirejs(['jquery', 'underscore', 'backbone', 'localStorage', 'dot', 'text',
     'parent.view', 'header.view', 'sidebar.view', 'photo.view',
     'gallery.view', 'history.model', 'history.collection', 'history.view',
-    'flickr.service'],
+    'flickr.service', 'photo.model'],
 function($, _, Backbone, LocalStorage, Dot, Text,
          ParentView, HeaderView, SidebarView, PhotoView,
          GalleryView, HistoryModel, HistoryCollection, HistoryView,
-         FlickrService){
+         FlickrService, PhotoModel){
 
 });

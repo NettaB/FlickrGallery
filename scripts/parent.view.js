@@ -2,17 +2,19 @@
  * Created by Netta.bondy on 28/02/2016.
  */
 define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
-    'gallery.view', 'flickr.service'],
-    function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService){
+    'gallery.view', 'flickr.service', 'favorites/favorites.collection'],
+    function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService,
+    FavoritesCollection){
 
     var theMainView = Backbone.View.extend({
 
         initialize: function() {
-            this.flickrService = new FlickrService;
+            this.flickrService = new FlickrService('0affe632606ef9d2bef8d03065994c47');
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
             this.galleryView = new GalleryView();
+            this.FavoritesCollection = new FavoritesCollection;
  
             /**
              * @listens openSidebar
@@ -43,9 +45,19 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
              * @listens prevPhotoPage
              * sends http request when phot view needs previous page
              */
-            this.photoView.on('prevPhotoPage', this.getPrevPage, this);
+            //this.photoView.on('prevPhotoPage', this.getPrevPage, this);
+            //this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
 
-            this.galleryView.on('prevPhotoPage', this.getPrevPage, this)
+
+            /**
+             * @listens gallerySetsPhoto
+             * executes setPhoto
+             */
+            this.galleryView.on('gallerySetsPhoto', this.setPhoto, this);
+
+            this.photoView.on('favorited', this.toggleFavorites, this);
+
+            this.sidebarView.on('favoritesClicked', this.sendFavorites, this)
         },
 
         /**
@@ -65,7 +77,9 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             console.log('searching...');
             this.flickrPageCounter = 1;
             this.query = searchVal;
-            this.flickrServiceSearch();
+            this.photoView.collection.reset();
+            this.galleryView.collection.reset();
+            this.flickrServiceSearch()
         },
 
         /**
@@ -87,26 +101,15 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * passes collection to photoView and galleryView
          */
         onSearchIsBack: function(){
-            //console.log('I know search is done!');
 
-            if (this.photoView.collection){
-                this.photoView.collection.reset();
-                this.photoView.collection = this.flickrService.flickrServiceCollection;
-            } else {
-                this.photoView.collection = this.flickrService.flickrServiceCollection
-            }
+            this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
+
             this.photoView.trigger('collectionFull');
 
+            this.galleryView.collection.add(this.flickrService.flickrServiceCollection.models);
 
-            //***this will init gallery view. DO NOT DELETE!!***//
-            if(this.galleryView.collection){
-                this.galleryView.collection.reset();
-                this.galleryView.collection = this.flickrService.flickrServiceCollection;
-            } else {
-                this.galleryView.collection = this.flickrService.flickrServiceCollection;
-            }
-            //init galleryview with collection
             this.galleryView.trigger('collectionFull')
+
         },
 
         /**
@@ -115,31 +118,53 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         getNextPage: function() {
-            console.log('I need the next page');
+            //console.log('I need the next page');
             this.flickrPageCounter +=1;
-            console.log('I am on page:');
-            console.log(this.flickrPageCounter);
+            //console.log('I am on page:');
+            //console.log(this.flickrPageCounter);
             this.flickrServiceSearch();
         },
 
         /**
-         * @function goPrevPage
-         * sets page number to retrieve from flickr
-         * executes search
+         * @function SetPhoto
+         * passes id from galleryView to photoView
+         * @param {string} clickedID  -id passed from galleryView
          */
-        getPrevPage: function() {
-            console.log('I need the previous page');
-            this.flickrPageCounter -=1;
-            console.log('I am on page:');
-            console.log(this.flickrPageCounter);
-            if(this.flickrPageCounter < 1 ){
-                this.photoView.alertFirstPhoto();
-                this.galleryView.alertFirstPhoto();
-            } else{
-                this.flickrServiceSearch();
-            }
-        }
+        setPhoto: function(clickedID) {
+            this.photoView.gallerySetView(clickedID);
+        },
 
-    });
+        toggleFavorites: function(photoModel) {
+            //console.log(photoModel);
+            var favBool = this.FavoritesCollection.findWhere({id: photoModel.attributes.id});
+            if (favBool) {
+                favBool.destroy();
+                this.sendFavorites()
+            } else {
+                this.FavoritesCollection.create(photoModel.attributes);
+            }
+            },
+
+        sendFavorites: function() {
+            var that = this;
+            this.FavoritesCollection.fetch()
+                .done(function(response) {
+                    that.galleryView.galleryCounter = 0;
+                    that.galleryView.collection.reset();
+                    that.galleryView.collection.add(response);
+                    that.galleryView.trigger('collectionFull');
+
+                    that.photoView.collection.reset();
+                    that.photoView.collection.add(response);
+                    //console.log(that.photoView.collection);
+                    that.photoView.trigger('collectionFull');
+
+                })
+                .fail(function(error){
+                    console.log(error)
+                })
+            }
+
+        });
     var main = new theMainView();
 });

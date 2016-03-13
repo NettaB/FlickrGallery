@@ -7,14 +7,17 @@ define(['backbone', 'flickr_service/flickr.service.collection'],
         /**
          * @file service to retrieve data from flickr
          */
-        return function() {
+        return function(apiKey) {
             return {
                 /**
                  * @property {string} base url
                  */
-                rootUrl: 'https://api.flickr.com/services/rest?' +
-                '&method=flickr.photos.search&api_key=0affe632606ef9d2bef8d03065994c47' +
-                '&format=json&nojsoncallback=1&sort=relevance&per_page=50&extras=url_q,url_l',
+                rootUrl:  'https://api.flickr.com/services/rest?&method=flickr.photos.search&api_key='
+                        .concat(apiKey)
+                        .concat('&format=json&nojsoncallback=1&sort=relevance&per_page=50&extras=url_q,url_l'),
+
+                //'0affe632606ef9d2bef8d03065994c47'
+
 
                 /**
                  * @param {string} searchVal user-input for search term
@@ -46,13 +49,8 @@ define(['backbone', 'flickr_service/flickr.service.collection'],
                  */
                 setPage: function(pageNo){
                     var newPage = '&page=' + String(pageNo);
-                    this.rootUrl =  this.rootUrl.concat(newPage);
-
-
+                    this.rootUrl =  this.rootUrl.concat(newPage)
                 }
-
             }
-
         }
-
     });

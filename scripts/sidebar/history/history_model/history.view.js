@@ -50,7 +50,6 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
 
         events: {
             'click .history-items': 'itemClicked'
-
         },
 
 
