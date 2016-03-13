@@ -93,6 +93,22 @@ header {
     margin-right: 1em
 }
 
+#favorites-btn {
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: top;
+    margin-top: 2em;
+}
+
+#favorites-btn span {
+    color: white;
+    font-size: 3em;
+    opacity: 0.7
+}
+
+#favorites-btn span:hover {
+    opacity: 1
+}
 .zero-base {
     color: white;
     text-align: center
@@ -170,4 +186,37 @@ header {
 
 .gallery-clicked {
     border: white 1px solid;
+}
+
+
+/*Modal*/
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+}
+
+
+
+#modal-div {
+    position: absolute;
+    display: block;
+    background: lightgray;
+    border-radius: 5px;
+    border: 2px solid darkgray;
+    width: 37em;
+    height: 14em;
+    left: 50em;
+    top: 20em;
+    box-shadow: 5px 5px 7px
+}
+
+#modal-div h2 {
+    text-align: center;
+    padding-top: 2em
 }

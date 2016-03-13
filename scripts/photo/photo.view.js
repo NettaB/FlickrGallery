@@ -2,8 +2,8 @@
  * Created by Netta.bondy on 29/02/2016.
  */
 define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'text!photo/tmpl/photo.view.template.html',
-'text!photo/tmpl/photo.empty.tmpl.html'],
-    function($, _, Backbone, Dot, PhotoCollection, PhotoViewTemplate, PhotoViewEmpty){
+'text!photo/tmpl/photo.empty.tmpl.html', 'text!modal/tmpl/modal.tmpl.html'],
+    function($, _, Backbone, Dot, PhotoCollection, PhotoViewTemplate, PhotoViewEmpty, ModalView){
 
         /**
          * @property {object} photoCounter      -counts clicks to navigate photos
@@ -24,12 +24,11 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
 
             this.collection = new PhotoCollection;
 
-            this.photoCounter = 0;
-
             /**
              * @event collectionFull
              */
-            this.on('collectionFull', this.setArray, this)
+            this.on('collectionFull', this.setArray, this);
+            this.on('favoritesRequested', this.showFavorites, this)
 
         },
 
@@ -39,6 +38,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          */
         render: function(currentPhoto){
             this.$el.empty().append(this.photoDisplay(currentPhoto));
+            this.currentPhoto = currentPhoto;
 
         },
 
@@ -49,6 +49,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          */
         setArray: function() {
             this.largePhotos = [];
+            this.photoCounter = 0;
             var currentModels = this.collection.models;
 
             for (var i = 0; i < currentModels.length; i++){
@@ -63,7 +64,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
 
         events: {
             'click #photo-right-chevron': 'getNextPhoto',
-            'click #photo-left-chevron': 'getPrevPhoto'
+            'click #photo-left-chevron': 'getPrevPhoto',
+            'click #favorites-btn': 'toggleFavorites'
         },
 
         /**
@@ -93,9 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
                 var currentPhoto = this.largePhotos[this.photoCounter];
                 this.render(currentPhoto);
             } else {
-                this.trigger('prevPhotoPage');
-                var photoEmpty = Dot.template(PhotoViewEmpty);
-                this.$('.image-display').empty().prepend(photoEmpty)
+                $("body").append(ModalView);
             }
         },
 
@@ -108,9 +108,13 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
         gallerySetView: function(a){
             var currentPhoto = this.collection.findWhere({id:a});
             this.photoCounter = this.collection.models.indexOf(currentPhoto);
-            console.log(this.photoCounter);
             this.render(currentPhoto);
+        },
+
+        toggleFavorites: function() {
+         this.trigger('favorited', this.currentPhoto)
         }
+
 
     });
 });

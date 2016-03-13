@@ -51,7 +51,9 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
             //handles close click
             'click .fn-click-close': 'clickClose',
             //handles search input change
-            'change input': 'doSearch'
+            'change input': 'doSearch',
+
+            'click #favorites-link': 'getFavorites'
         },
 
         /**
@@ -99,6 +101,10 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
         historySearch: function(clickedText) {
             var searchVal = String(clickedText);
             this.trigger('searchEvent', [searchVal]);
+        },
+
+        getFavorites: function() {
+            this.trigger('favoritesClicked')
         }
 
     });

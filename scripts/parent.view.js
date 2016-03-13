@@ -2,8 +2,9 @@
  * Created by Netta.bondy on 28/02/2016.
  */
 define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
-    'gallery.view', 'flickr.service'],
-    function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService){
+    'gallery.view', 'flickr.service', 'favorites/favorites.collection'],
+    function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService,
+    FavoritesCollection){
 
     var theMainView = Backbone.View.extend({
 
@@ -13,6 +14,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
             this.galleryView = new GalleryView();
+            this.FavoritesCollection = new FavoritesCollection;
  
             /**
              * @listens openSidebar
@@ -52,6 +54,10 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
              * executes setPhoto
              */
             this.galleryView.on('gallerySetsPhoto', this.setPhoto, this);
+
+            this.photoView.on('favorited', this.toggleFavorites, this);
+
+            this.sidebarView.on('favoritesClicked', this.sendFavorites, this)
         },
 
         /**
@@ -71,7 +77,9 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             console.log('searching...');
             this.flickrPageCounter = 1;
             this.query = searchVal;
-            this.flickrServiceSearch();
+            this.photoView.collection.reset();
+            this.galleryView.collection.reset();
+            this.flickrServiceSearch()
         },
 
         /**
@@ -79,7 +87,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * triggers service search method
          */
         flickrServiceSearch: function() {
-            console.log("I\'m here");
             if (this.flickrPageCounter)
             this.flickrService.setPage (this.flickrPageCounter);
             //console.log(this.flickrService.rootUrl);
@@ -96,7 +103,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
         onSearchIsBack: function(){
 
             this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
-            console.log(this.photoView.collection);
 
             this.photoView.trigger('collectionFull');
 
@@ -126,8 +132,39 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          */
         setPhoto: function(clickedID) {
             this.photoView.gallerySetView(clickedID);
-        }
+        },
 
-    });
+        toggleFavorites: function(photoModel) {
+            //console.log(photoModel);
+            var favBool = this.FavoritesCollection.findWhere({id: photoModel.attributes.id});
+            if (favBool) {
+                favBool.destroy();
+                this.sendFavorites()
+            } else {
+                this.FavoritesCollection.create(photoModel.attributes);
+            }
+            },
+
+        sendFavorites: function() {
+            var that = this;
+            this.FavoritesCollection.fetch()
+                .done(function(response) {
+                    that.galleryView.galleryCounter = 0;
+                    that.galleryView.collection.reset();
+                    that.galleryView.collection.add(response);
+                    that.galleryView.trigger('collectionFull');
+
+                    that.photoView.collection.reset();
+                    that.photoView.collection.add(response);
+                    //console.log(that.photoView.collection);
+                    that.photoView.trigger('collectionFull');
+
+                })
+                .fail(function(error){
+                    console.log(error)
+                })
+            }
+
+        });
     var main = new theMainView();
 });

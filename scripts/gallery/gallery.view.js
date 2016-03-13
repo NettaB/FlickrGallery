@@ -2,8 +2,10 @@
  * Created by Netta.bondy on 29/02/2016.
  */
 define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
-    'text!gallery/tmpl/gallery.view.template.html', 'text!gallery/tmpl/gallery.empty.tmpl.html'],
-    function($, _, Backbone, Dot, GalleryCollection, GalleryViewTemplate, GalleryViewEmpty){
+    'text!gallery/tmpl/gallery.view.template.html', 'text!gallery/tmpl/gallery.empty.tmpl.html',
+    'text!modal/tmpl/modal.tmpl.html'],
+    function($, _, Backbone, Dot, GalleryCollection, GalleryViewTemplate, GalleryViewEmpty,
+    ModalView){
 
     return Backbone.View.extend({
         el: '#gallery',
@@ -15,6 +17,7 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
             console.log('Gallery view says hello world!');
             this.galleryDisplay = Dot.template(GalleryViewTemplate);
             this.collection = new GalleryCollection;
+
             this.galleryCounter = 0;
 
             this.on('collectionFull', this.setArray, this)
@@ -37,11 +40,11 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
          * returns this.galleriesArr
          */
         setArray: function() {
+            console.log(this.galleryCounter);
             this.smallPhotosArr = [];
             this.galleriesArr = [];
 
             var currentModels = this.collection.models;
-
             /**
              * populates temporary array of models
              */
@@ -51,6 +54,7 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
                 }
             }
 
+
             /**
              *populates galleriesArr with sub-arrays to display
              */
@@ -59,17 +63,23 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
             var leftover = arrayLength%9;
             var arrayEdge = 9;
 
-            for (var i = 0; i < repeats; i++) {
-                var localStart = i * 9;
-                var tempArr = this.smallPhotosArr.slice(localStart, arrayEdge);
-                this.galleriesArr.push(tempArr);
-                arrayEdge +=9
+            if(repeats != 0){
+                for (var i = 0; i < repeats; i++) {
+                    var localStart = i * 9;
+                    var tempArr = this.smallPhotosArr.slice(localStart, arrayEdge);
+                    this.galleriesArr.push(tempArr);
+                    arrayEdge +=9
+                }
             }
 
             if (leftover != 0) {
-                var lastTempArr = this.smallPhotosArr.slice(arrayLength - 9, arrayLength);
+                if (arrayLength > 9){
+                    var lastTempArr = this.smallPhotosArr.slice(arrayLength - 9, arrayLength);
                     this.galleriesArr.push(lastTempArr)
+                } else {
+                    this.galleriesArr.push(this.smallPhotosArr);
                 }
+            }
 
             this.render(this.galleriesArr[this.galleryCounter]);
 
@@ -99,8 +109,9 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
 
                 this.render(this.galleriesArr[this.galleryCounter]);
             } else {
-                var galleryEmpty = Dot.template(GalleryViewEmpty);
-                this.$('#gallery-display').empty().prepend(galleryEmpty);
+                $("body").append(ModalView);
+                //var galleryEmpty = Dot.template(GalleryViewEmpty);
+                //this.$('#gallery-display').empty().prepend(galleryEmpty);
             }
         },
 
