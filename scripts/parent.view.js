@@ -2,19 +2,23 @@
  * Created by Netta.bondy on 28/02/2016.
  */
 define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
-    'gallery.view', 'flickr.service', 'favorites/favorites.collection'],
+    'gallery.view', 'flickr.service', 'favorites/favorites.collection', 'viewed/viewed.collection'],
     function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService,
-    FavoritesCollection){
+    FavoritesCollection, ViewedCollection){
 
     var theMainView = Backbone.View.extend({
+        el: 'body',
 
         initialize: function() {
             this.flickrService = new FlickrService('0affe632606ef9d2bef8d03065994c47');
+            this.FavoritesCollection = new FavoritesCollection;
+            this.FavoritesCollection.fetch();
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
             this.galleryView = new GalleryView();
-            this.FavoritesCollection = new FavoritesCollection;
+
+
  
             /**
              * @listens openSidebar
@@ -48,7 +52,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             //this.photoView.on('prevPhotoPage', this.getPrevPage, this);
             //this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
 
-
             /**
              * @listens gallerySetsPhoto
              * executes setPhoto
@@ -57,7 +60,9 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
             this.photoView.on('favorited', this.toggleFavorites, this);
 
-            this.sidebarView.on('favoritesClicked', this.sendFavorites, this)
+            this.sidebarView.on('favoritesClicked', this.sendFavorites, this);
+
+            this.photoView.on('viewed', this.markViewed, this);
         },
 
         /**
@@ -118,10 +123,10 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         getNextPage: function() {
-            //console.log('I need the next page');
+            if (this.query === "") {
+                this.galleryView.trigger('lastPhoto');
+            }
             this.flickrPageCounter +=1;
-            //console.log('I am on page:');
-            //console.log(this.flickrPageCounter);
             this.flickrServiceSearch();
         },
 
@@ -139,7 +144,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             var favBool = this.FavoritesCollection.findWhere({id: photoModel.attributes.id});
             if (favBool) {
                 favBool.destroy();
-                this.sendFavorites()
+
             } else {
                 this.FavoritesCollection.create(photoModel.attributes);
             }
@@ -147,24 +152,45 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
         sendFavorites: function() {
             var that = this;
+            this.query = "";
+            console.log(this.query);
             this.FavoritesCollection.fetch()
                 .done(function(response) {
                     that.galleryView.galleryCounter = 0;
                     that.galleryView.collection.reset();
                     that.galleryView.collection.add(response);
                     that.galleryView.trigger('collectionFull');
+                    //that.galleryView.favorites = 1
 
                     that.photoView.collection.reset();
                     that.photoView.collection.add(response);
-                    //console.log(that.photoView.collection);
                     that.photoView.trigger('collectionFull');
+                    //that.photoView.favorites = 1
 
                 })
                 .fail(function(error){
                     console.log(error)
                 })
+            },
+
+        markViewed: function(currentPhoto) {
+            this.viewedCollection = new ViewedCollection;
+            var favBool = this.FavoritesCollection.findWhere({id: currentPhoto.attributes.id});
+            //console.log(favBool);
+            if (favBool) {
+                //console.log("the limit does not exist!")
+                this.photoView.trigger('favoriteSpotted');
             }
 
+            this.viewedCollection.create(currentPhoto.attributes);
+            this.viewedCollection.fetch()
+                .done(function(response) {
+                    //console.log(response);
+                })
+                .fail(function(error) {
+                    console.log(error)
+                });
+        }
         });
     var main = new theMainView();
 });

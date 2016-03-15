@@ -40,12 +40,12 @@ requirejs.config({
     }
 });
 
-requirejs(['jquery', 'underscore', 'backbone', 'localStorage', 'dot', 'text',
-    'parent.view', 'header.view', 'sidebar.view', 'photo.view',
+requirejs(['jquery', 'underscore', 'backbone', 'localStorage',
+    'dot', 'text', 'parent.view', 'header.view', 'sidebar.view', 'photo.view',
     'gallery.view', 'history.model', 'history.collection', 'history.view',
     'flickr.service', 'photo.model'],
-function($, _, Backbone, LocalStorage, Dot, Text,
-         ParentView, HeaderView, SidebarView, PhotoView,
+function($, _, Backbone, LocalStorage,
+         Dot, Text, ParentView, HeaderView, SidebarView, PhotoView,
          GalleryView, HistoryModel, HistoryCollection, HistoryView,
          FlickrService, PhotoModel){
 

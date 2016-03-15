@@ -28,7 +28,8 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
              * @event collectionFull
              */
             this.on('collectionFull', this.setArray, this);
-            this.on('favoritesRequested', this.showFavorites, this)
+            this.on('favoritesRequested', this.showFavorites, this);
+            this.on('favoriteSpotted', this.markFavorite, this);
 
         },
 
@@ -39,7 +40,7 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
         render: function(currentPhoto){
             this.$el.empty().append(this.photoDisplay(currentPhoto));
             this.currentPhoto = currentPhoto;
-
+            this.trigger('viewed', this.currentPhoto);
         },
 
         /**
@@ -89,13 +90,13 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          * @function prevPhoto
          * subtracts 1 from photoCounter
          */
-        getPrevPhoto: function(){
+        getPrevPhoto: function(e){
             this.photoCounter -=1;
             if(this.photoCounter >= 0) {
                 var currentPhoto = this.largePhotos[this.photoCounter];
                 this.render(currentPhoto);
             } else {
-                $("body").append(ModalView);
+                $(e.target).addClass('hidden')
             }
         },
 
@@ -111,8 +112,26 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
             this.render(currentPhoto);
         },
 
-        toggleFavorites: function() {
-         this.trigger('favorited', this.currentPhoto)
+            /**
+             * @function toggleFavorites
+             * toggles favorite indication on this view
+             * @fires ParentView#favorited
+             * passes photo to be added to favorites collection
+             * @param e
+             */
+        toggleFavorites: function(e) {
+            var clicked = $(e.target);
+            clicked.toggleClass("clicked");
+            this.trigger('favorited', this.currentPhoto)
+        },
+
+        /**
+         * @function markFavorite
+         * marks a photo as existing in the favorites collection
+         */
+        markFavorite: function() {
+            var star = $('#star-button');
+            star.addClass('clicked');
         }
 
 

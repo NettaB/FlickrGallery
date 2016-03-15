@@ -4,10 +4,19 @@
         <
     </a>
 </div>
+
 <div class="col-md-10" id="gallery-display">
     {{~it.a :value:index}}
-    <img class="gallery-photo" id="{{=value.id}}" src="{{=value.attributes.url_t}}"/>
+    <div class="gallery-photo-div">
+        <img class="gallery-photo" id="{{=value.id}}" src="{{=value.attributes.url_t}}"/>
+        {{?value.viewed}}
+        <span class="glyphicon glyphicon-eye-open eyee" aria-hidden="true"></span>
+        {{??}}
+        <div class="glyphicon glyphicon-eye-open eyee-hidden" aria-hidden="true"></div>
+        {{?}}
+    </div>
     {{~}}
+
 </div>
 <div class="pull-right chevron-div">
     <a class="right glyph-link" id="right-chevron" href="#">
