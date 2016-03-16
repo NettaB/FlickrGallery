@@ -1,9 +1,8 @@
 /**
  * Created by Netta.bondy on 29/02/2016.
  */
-define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'text!photo/tmpl/photo.view.template.html',
-'text!photo/tmpl/photo.empty.tmpl.html', 'text!modal/tmpl/modal.tmpl.html'],
-    function($, _, Backbone, Dot, PhotoCollection, PhotoViewTemplate, PhotoViewEmpty, ModalView){
+define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'text!photo/tmpl/photo.view.template.html'],
+    function($, _, Backbone, Dot, PhotoCollection, PhotoViewTemplate){
 
         /**
          * @property {object} photoCounter      -counts clicks to navigate photos
@@ -18,11 +17,10 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          * sets template
          */
         initialize: function(){
-            console.log('Photo view says hello world!');
-
             this.photoDisplay = Dot.template(PhotoViewTemplate);
 
             this.collection = new PhotoCollection;
+            this.photoCounter = 0;
 
             /**
              * @event collectionFull
@@ -50,22 +48,26 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          */
         setArray: function() {
             this.largePhotos = [];
-            this.photoCounter = 0;
-            var currentModels = this.collection.models;
+            var that = this,
+                currentModels = this.collection.models;
 
-            for (var i = 0; i < currentModels.length; i++){
-                if(currentModels[i].attributes.url_l && currentModels[i].attributes.url_t){
-                    this.largePhotos.push(currentModels[i]);
+            _.each(currentModels, function(item){
+                if(item.attributes.url_l && item.attributes.url_t) {
+                    that.largePhotos.push(item)
                 }
-            }
+            });
 
             var currentPhoto = this.largePhotos[this.photoCounter];
             this.render(currentPhoto);
         },
 
         events: {
-            'click #photo-right-chevron': 'getNextPhoto',
-            'click #photo-left-chevron': 'getPrevPhoto',
+            'mouseover #right-chevron-div': 'showChevron',
+            'mouseout #right-chevron-div': 'hideChevron',
+            'mouseover #left-chevron-div': 'showChevron',
+            'mouseout #left-chevron-div': 'hideChevron',
+            'click #right-chevron-div': 'getNextPhoto',
+            'click #left-chevron-div': 'getPrevPhoto',
             'click #favorites-btn': 'toggleFavorites'
         },
 
@@ -73,17 +75,29 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
          * @function nextPhoto
          * adds 1 to photoCounter
          */
-        getNextPhoto: function(){
+        getNextPhoto: function(e){
             var maxLength = this.largePhotos.length;
             this.photoCounter +=1;
-            console.log(this.photoCounter);
+            clickedElem = $(e.target);
+            //console.log(this.photoCounter);
 
-            if (this.photoCounter < maxLength) {
-                var currentPhoto = this.largePhotos[this.photoCounter];
-                this.render(currentPhoto);
-            } else {
-                this.trigger('nextPhotoPage')
+            if(this.favorites) {
+                if(this.photoCounter < maxLength) {
+                    var currentPhoto = this.largePhotos[this.photoCounter];
+                    this.render(currentPhoto);
+                } else {
+                    clickedElem.hide();
+
+                }
+            } else{
+                if (this.photoCounter < maxLength) {
+                    var currentPhoto = this.largePhotos[this.photoCounter];
+                    this.render(currentPhoto);
+                } else {
+                    this.trigger('nextPhotoPage')
+                }
             }
+
         },
 
         /**
@@ -132,6 +146,18 @@ define(['jquery', 'underscore', 'backbone', 'dot', 'photo/photo.collection', 'te
         markFavorite: function() {
             var star = $('#star-button');
             star.addClass('clicked');
+        },
+
+        showChevron: function(e) {
+            var elem =  $(e.target);
+            var directly = elem.find('span');
+            directly.addClass('viewable')
+        },
+
+        hideChevron: function(e) {
+            var elem = $(e.target);
+            var directly = elem.find('span');
+            directly.removeClass('viewable')
         }
 
 

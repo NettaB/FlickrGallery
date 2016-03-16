@@ -12,13 +12,9 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
          * @returns {Array} smallPhotoArr to render in view
          */
         initialize: function(){
-            console.log('Gallery view says hello world!');
             this.galleryDisplay = Dot.template(GalleryViewTemplate);
             this.collection = new GalleryCollection;
             this.viewedCollection = new ViewedCollection;
-
-            this.galleryCounter = 0;
-            this.favorites = 0;
 
             this.on('collectionFull', this.setArray, this)
         },
@@ -33,6 +29,10 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
             'click .gallery-photo': 'setPhotoDisplay'
         },
 
+        defaults: {
+            galleryLength:  9
+        },
+
         /**
          * @function setArray
          * populates the array to be iterated over
@@ -40,29 +40,33 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
          * returns this.galleriesArr
          */
         setArray: function() {
-            //console.log(this.galleryCounter);
             this.smallPhotosArr = [];
             this.galleriesArr = [];
             this.getViewed();
 
-            var currentModels = this.collection.models;
-            var cMLength = currentModels.length;
+            var that = this,
+                currentModels = this.collection.models;
+
             /**
              * populates temporary array of models
              */
-            for( var j = 0; j < cMLength; j++) {
-                if (currentModels[j].attributes.url_l &&  currentModels[j].attributes.url_t){
-                    this.smallPhotosArr.push(currentModels[j]);
+            _.each(currentModels, function(item) {
+                if(item.attributes.url_l && item.attributes.url_t) {
+                    that.smallPhotosArr.push(item)
                 }
-                if (this.smallPhotosArr[j]) {
-                    var photoID = this.smallPhotosArr[j].id;
-                    var thisPhoto = this.viewedCollection.findWhere({id: photoID});
-                    if(thisPhoto){
-                        this.smallPhotosArr[j].viewed = true;
-                    }
+            });
+
+            /**
+             * adds viewed attributes to photos in viewed collection
+             */
+            _.each(this.smallPhotosArr, function(item) {
+                var photoID = item.id;
+                var viewedPhoto = that.viewedCollection.findWhere({id: photoID});
+                if(viewedPhoto){
+                    item.viewed = true
                 }
-            }
-            //console.log(this.smallPhotosArr);
+
+            });
 
             /**
              *populates galleriesArr with sub-arrays to display
@@ -70,24 +74,22 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
             var arrayLength = this.smallPhotosArr.length;
             var repeats = Math.floor(arrayLength/9);
             var leftover = arrayLength%9;
-            var arrayEdge = 9;
+            var arrayEdge = this.defaults.galleryLength;
 
             if(repeats != 0){
                 for (var i = 0; i < repeats; i++) {
-                    var localStart = i * 9;
+                    var localStart = i * this.defaults.galleryLength;
                     var tempArr = this.smallPhotosArr.slice(localStart, arrayEdge);
                     this.galleriesArr.push(tempArr);
-                    arrayEdge +=9
+                    arrayEdge += this.defaults.galleryLength
                 }
+                this.limit = repeats -1;
             }
 
             if (leftover != 0) {
-                if (arrayLength > 9){
-                    var lastTempArr = this.smallPhotosArr.slice(arrayLength - 9, arrayLength);
-                    this.galleriesArr.push(lastTempArr)
-                } else {
-                    this.galleriesArr.push(this.smallPhotosArr);
-                }
+                var loStart = arrayLength - leftover;
+                var lastArr = this.smallPhotosArr.slice(loStart, arrayLength);
+                this.galleriesArr.push(lastArr);
             }
 
             this.render(this.galleriesArr[this.galleryCounter]);
@@ -106,6 +108,9 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
                         }
                     }
                 })
+                .fail(function(err){
+                    console.log(err)
+                })
         },
 
         /**
@@ -117,20 +122,19 @@ define(['jquery', 'underscore','backbone', 'dot', 'gallery/gallery.collection',
             this.galleryCounter += 1;
             var clickedElem = $(e.target);
 
-            //if (this.favorites) {
-              //  if (this.galleryCounter < maxLength) {
-           //         this.render(this.galleriesArr[this.galleryCounter])
-             //   } else {
-               //     clickedElem.addClass('hidden')
-               // }
-           // } else {
-                if (this.galleryCounter < maxLength) {
-                    this.render(this.galleriesArr[this.galleryCounter]);
+            if (this.favorites) {
+                if(this.galleryCounter < maxLength) {
+                    this.render(this.galleriesArr[this.galleryCounter])
                 } else {
-                    this.trigger('nextPhotoPage');
-                    console.log(this.id);
+                    clickedElem.hide(0);
                 }
-           // }
+            } else {
+                if (this.galleryCounter < this.limit) {
+                    this.render(this.galleriesArr[this.galleryCounter])
+                } else {
+                    this.trigger('nextPhotoPage')
+                }
+            }
         },
 
         /**

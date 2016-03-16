@@ -9,8 +9,12 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
     var theMainView = Backbone.View.extend({
         el: 'body',
 
+        defaults: {
+            apiKey: '0affe632606ef9d2bef8d03065994c47'
+        },
+
         initialize: function() {
-            this.flickrService = new FlickrService('0affe632606ef9d2bef8d03065994c47');
+            this.flickrService = new FlickrService(this.defaults.apiKey);
             this.FavoritesCollection = new FavoritesCollection;
             this.FavoritesCollection.fetch();
             this.headerView = new HeaderView();
@@ -45,12 +49,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.photoView.on('nextPhotoPage', this.getNextPage, this);
             this.galleryView.on('nextPhotoPage', this.getNextPage, this);
 
-            /**
-             * @listens prevPhotoPage
-             * sends http request when phot view needs previous page
-             */
-            //this.photoView.on('prevPhotoPage', this.getPrevPage, this);
-            //this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
 
             /**
              * @listens gallerySetsPhoto
@@ -79,11 +77,13 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         flickrServiceInit: function(searchVal) {
-            console.log('searching...');
             this.flickrPageCounter = 1;
             this.query = searchVal;
             this.photoView.collection.reset();
+            this.photoView.photoCounter = 0;
             this.galleryView.collection.reset();
+            this.galleryView.favorites = 0;
+            this.galleryView.galleryCounter = 0;
             this.flickrServiceSearch()
         },
 
@@ -106,6 +106,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * passes collection to photoView and galleryView
          */
         onSearchIsBack: function(){
+            this.totalPages = this.flickrService.flickrServiceCollection.totalPages;
 
             this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
 
@@ -123,11 +124,12 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         getNextPage: function() {
-            if (this.query === "") {
-                this.galleryView.trigger('lastPhoto');
-            }
             this.flickrPageCounter +=1;
-            this.flickrServiceSearch();
+            if (this.flickrPageCounter < this.totalPages) {
+                this.flickrServiceSearch()
+            } else {
+                alert('no more photos!')
+            }
         },
 
         /**
@@ -152,20 +154,18 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
         sendFavorites: function() {
             var that = this;
-            this.query = "";
-            console.log(this.query);
             this.FavoritesCollection.fetch()
                 .done(function(response) {
                     that.galleryView.galleryCounter = 0;
                     that.galleryView.collection.reset();
                     that.galleryView.collection.add(response);
                     that.galleryView.trigger('collectionFull');
-                    //that.galleryView.favorites = 1
+                    that.galleryView.favorites = 1;
 
                     that.photoView.collection.reset();
                     that.photoView.collection.add(response);
                     that.photoView.trigger('collectionFull');
-                    //that.photoView.favorites = 1
+                    that.photoView.favorites = 1
 
                 })
                 .fail(function(error){

@@ -75,31 +75,38 @@ header {
 
 .image-display {
     display: inline-block;
-    margin-top: 2em;
-    margin-left: 10.5em;
-    position: relative
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1
+}
+
+#img-container{
+    width: 900px;
+    position: relative;
+    margin: auto;
+    background-color: #424242;
+    margin-top: 1em;
+    z-index: 2
 }
 
 #photo-lg {
-    max-width: 90rem;
-    max-height:65rem;
+    max-width: 900px;
+    max-height: 675px;
     border-radius: 2px;
     position: relative;
-    left: 7em
-}
-#photo-left-chevron {
-    margin-left: 1em;
-}
-
-#photo-right-chevron {
-    margin-right: 1em
+    display: block;
+    margin-right: auto;
+    margin-left: auto
 }
 
 #favorites-btn {
     display: inline-block;
     cursor: pointer;
-    vertical-align: top;
-    position: relative
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 4
 }
 
 .starr {
@@ -110,10 +117,76 @@ header {
 .starr.clicked {
     color: #ffff99
 }
-/*.zero-base {
+
+.photo-chevron {
+    font-size: 5em;
     color: white;
-    text-align: center
-}*/
+    font-weight: 800;
+    opacity: 0
+}
+
+.photo-chevron.viewable {
+    opacity: 0.9;
+    text-shadow: 2px 5px 10px #424242
+}
+
+#left-chevron-div {
+    display: inline-block;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 25%;
+    cursor: pointer
+}
+
+.left-chevron-div-too {
+    position: absolute;
+    left: 0;
+    top: 45%
+}
+
+#right-chevron-div {
+    display: inline-block;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 75%;
+    cursor: pointer
+}
+
+.right-chevron-div-too {
+    position: absolute;
+    right: 0;
+    top: 45%
+}
+
+/*Gallery*/
+
+#gallery {
+    background-color: darkslategray;
+    width: 100%;
+    height: 18rem
+}
+
+#gallery-display {
+    margin-left: 3em;
+    margin-top: 1em;
+}
+
+.gallery-photo-div {
+    display: inline-block
+}
+
+.gallery-photo {
+    display: inline;
+    border-radius: 2px;
+    box-shadow: 5px 5px 10px;
+    cursor: pointer;
+}
 
 .glyph-link:link {
     text-decoration: none;
@@ -156,30 +229,6 @@ header {
     font-weight: 800;
 }
 
-/*Gallery*/
-
-#gallery {
-    background-color: darkslategray;
-    width: 100%;
-    height: 18rem
-}
-
-#gallery-display {
-    margin-left: 3em;
-    margin-top: 1em;
-}
-
-.gallery-photo-div {
-    display: inline-block
-}
-
-.gallery-photo {
-    display: inline;
-    border-radius: 2px;
-    box-shadow: 5px 5px 10px;
-    cursor: pointer;
-}
-
 .eyee {
     color: white;
     vertical-align: top;
@@ -209,7 +258,7 @@ header {
 
 /*Modal*/
 
-#overlay {
+/*#overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -237,4 +286,4 @@ header {
 #modal-div h2 {
     text-align: center;
     padding-top: 2em
-}
+}*/

@@ -15,7 +15,6 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
          * initializes historyView view
          */
         initialize: function(){
-            console.log('Sidebar view says hello world!');
 
             this.render();
 
@@ -76,9 +75,7 @@ define(['jquery', 'backbone', 'dot', 'history.collection', 'history.view',
          * adds search terms to collection
          */
         doSearch: function() {
-            console.log('search initiated!');
             var searchVal = $('#search-input').val().trim();
-            console.log(searchVal);
             //validations
             if (!searchVal) {
                 alert("Please enter a search value.")

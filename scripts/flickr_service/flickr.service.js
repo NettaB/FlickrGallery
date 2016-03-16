@@ -14,7 +14,7 @@ define(['backbone', 'flickr_service/flickr.service.collection'],
                  */
                 rootUrl:  'https://api.flickr.com/services/rest?&method=flickr.photos.search&api_key='
                         .concat(apiKey)
-                        .concat('&format=json&nojsoncallback=1&sort=relevance&per_page=50&extras=url_q,url_l'),
+                        .concat('&format=json&nojsoncallback=1&sort=relevance&per_page=100&extras=url_q,url_l'),
 
                 //'0affe632606ef9d2bef8d03065994c47'
 
