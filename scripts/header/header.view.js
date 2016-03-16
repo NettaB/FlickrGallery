@@ -11,7 +11,6 @@ define(['jquery', 'backbone', 'text!header/tmpl/header.tmpl.html'],
          *@function initialize
          */
         initialize: function(){
-            console.log('Header view says hello world!');
             this.render();
         },
 

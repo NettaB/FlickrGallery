@@ -2,19 +2,27 @@
  * Created by Netta.bondy on 28/02/2016.
  */
 define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
-    'gallery.view', 'flickr.service', 'favorites/favorites.collection'],
+    'gallery.view', 'flickr.service', 'favorites/favorites.collection', 'viewed/viewed.collection'],
     function($, Backbone, HeaderView, SidebarView, PhotoView, GalleryView, FlickrService,
-    FavoritesCollection){
+    FavoritesCollection, ViewedCollection){
 
     var theMainView = Backbone.View.extend({
+        el: 'body',
+
+        defaults: {
+            apiKey: '0affe632606ef9d2bef8d03065994c47'
+        },
 
         initialize: function() {
-            this.flickrService = new FlickrService('0affe632606ef9d2bef8d03065994c47');
+            this.flickrService = new FlickrService(this.defaults.apiKey);
+            this.FavoritesCollection = new FavoritesCollection;
+            this.FavoritesCollection.fetch();
             this.headerView = new HeaderView();
             this.sidebarView = new SidebarView();
             this.photoView = new PhotoView();
             this.galleryView = new GalleryView();
-            this.FavoritesCollection = new FavoritesCollection;
+
+
  
             /**
              * @listens openSidebar
@@ -41,13 +49,6 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             this.photoView.on('nextPhotoPage', this.getNextPage, this);
             this.galleryView.on('nextPhotoPage', this.getNextPage, this);
 
-            /**
-             * @listens prevPhotoPage
-             * sends http request when phot view needs previous page
-             */
-            //this.photoView.on('prevPhotoPage', this.getPrevPage, this);
-            //this.galleryView.on('prevPhotoPage', this.getPrevPage, this);
-
 
             /**
              * @listens gallerySetsPhoto
@@ -57,7 +58,9 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
 
             this.photoView.on('favorited', this.toggleFavorites, this);
 
-            this.sidebarView.on('favoritesClicked', this.sendFavorites, this)
+            this.sidebarView.on('favoritesClicked', this.sendFavorites, this);
+
+            this.photoView.on('viewed', this.markViewed, this);
         },
 
         /**
@@ -74,11 +77,13 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         flickrServiceInit: function(searchVal) {
-            console.log('searching...');
             this.flickrPageCounter = 1;
             this.query = searchVal;
             this.photoView.collection.reset();
+            this.photoView.photoCounter = 0;
             this.galleryView.collection.reset();
+            this.galleryView.favorites = 0;
+            this.galleryView.galleryCounter = 0;
             this.flickrServiceSearch()
         },
 
@@ -101,6 +106,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * passes collection to photoView and galleryView
          */
         onSearchIsBack: function(){
+            this.totalPages = this.flickrService.flickrServiceCollection.totalPages;
 
             this.photoView.collection.add(this.flickrService.flickrServiceCollection.models);
 
@@ -118,11 +124,12 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
          * executes search
          */
         getNextPage: function() {
-            //console.log('I need the next page');
             this.flickrPageCounter +=1;
-            //console.log('I am on page:');
-            //console.log(this.flickrPageCounter);
-            this.flickrServiceSearch();
+            if (this.flickrPageCounter < this.totalPages) {
+                this.flickrServiceSearch()
+            } else {
+                alert('no more photos!')
+            }
         },
 
         /**
@@ -139,7 +146,7 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
             var favBool = this.FavoritesCollection.findWhere({id: photoModel.attributes.id});
             if (favBool) {
                 favBool.destroy();
-                this.sendFavorites()
+
             } else {
                 this.FavoritesCollection.create(photoModel.attributes);
             }
@@ -153,18 +160,37 @@ define (['jquery', 'backbone', 'header.view', 'sidebar.view', 'photo.view',
                     that.galleryView.collection.reset();
                     that.galleryView.collection.add(response);
                     that.galleryView.trigger('collectionFull');
+                    that.galleryView.favorites = 1;
 
                     that.photoView.collection.reset();
                     that.photoView.collection.add(response);
-                    //console.log(that.photoView.collection);
                     that.photoView.trigger('collectionFull');
+                    that.photoView.favorites = 1
 
                 })
                 .fail(function(error){
                     console.log(error)
                 })
+            },
+
+        markViewed: function(currentPhoto) {
+            this.viewedCollection = new ViewedCollection;
+            var favBool = this.FavoritesCollection.findWhere({id: currentPhoto.attributes.id});
+            //console.log(favBool);
+            if (favBool) {
+                //console.log("the limit does not exist!")
+                this.photoView.trigger('favoriteSpotted');
             }
 
+            this.viewedCollection.create(currentPhoto.attributes);
+            this.viewedCollection.fetch()
+                .done(function(response) {
+                    //console.log(response);
+                })
+                .fail(function(error) {
+                    console.log(error)
+                });
+        }
         });
     var main = new theMainView();
 });

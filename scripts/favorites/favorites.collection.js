@@ -1,8 +1,8 @@
 /**
  * Created by Netta.bondy on 13/03/2016.
  */
-define(['backbone', 'localStorage', 'photo.model'],
-    function(Backbone, LocalStorage, PhotoModel){
+define(['backbone', 'underscore', 'localStorage', 'photo.model'],
+    function(Backbone, _, LocalStorage, PhotoModel){
 
     return Backbone.Collection.extend ({
 

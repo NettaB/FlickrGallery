@@ -15,7 +15,7 @@ define(['backbone', 'underscore', 'photo.model'],
              * @returns {Array|*} Array of photo objects with necessary data - urls, photo sizes and ids
              */
             parse: function(response) {
-                //console.log('Am parsing!');
+                this.totalPages = response.photos.pages;
                 var photoArr = response.photos.photo;
                 var newModels = _.map(photoArr, function(item){
                     return {

@@ -99,7 +99,7 @@ define(['jquery', 'backbone', 'dot', 'localStorage', 'history.collection',
         },
 
         /**
-         * @fires historyView#historyItemClicked
+         * @fires historyView#bhistoryItemClicked
          * @param e     -search term which was clicked
          */
         itemClicked: function(e) {
