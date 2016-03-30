@@ -31,18 +31,259 @@ header {
 /*Sidebar*/
 #sidebar{
     background-color: lightgray;
-    display: none
+    display: none;
+    height: 70rem
+}
+#favorites-link {
+    text-decoration: none;
+    font-size: 1.5em;
+    padding: 0.5em 0 0.3em 1em;
+}
+#favorites-link a:hover {
+    text-decoration: none;
+    color: #000033;
+}
+
+#history-section {
+    background-color: white;
+    border-radius: 3px;
+    margin: 1em
+}
+
+#history-section h4 {
+    padding: 0.5em 0 0.5em 0.5em
 }
 
 #history-list {
-    background-color: white;
-    border-radius: 3px;
+    list-style: none;
+    padding-left: 1em;
+    font-size: 1.1em;
 }
 
-
+#history-list li{
+    margin-bottom: 0.3em;
+}
 /*Photo*/
 #photo {
     background-color: darkgray;
+    height: 70rem
+}
+
+#empty-photo-section {
+    height: 20em;
+}
+
+.image-display {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1
+}
+
+#img-container{
+    width: 900px;
+    position: relative;
+    margin: auto;
+    background-color: #424242;
+    margin-top: 1em;
+    z-index: 2
+}
+
+#photo-lg {
+    max-width: 900px;
+    max-height: 675px;
+    border-radius: 2px;
+    position: relative;
+    display: block;
+    margin-right: auto;
+    margin-left: auto
+}
+
+#favorites-btn {
+    display: inline-block;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 4
+}
+
+.starr {
+    color: white;
+    font-size: 3em
+}
+
+.starr.clicked {
+    color: #ffff99
+}
+
+.photo-chevron {
+    font-size: 5em;
+    color: white;
+    font-weight: 800;
+    opacity: 0
+}
+
+.photo-chevron.viewable {
+    opacity: 0.9;
+    text-shadow: 2px 5px 10px #424242
+}
+
+#left-chevron-div {
+    display: inline-block;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 25%;
+    cursor: pointer
+}
+
+.left-chevron-div-too {
+    position: absolute;
+    left: 0;
+    top: 45%
+}
+
+#right-chevron-div {
+    display: inline-block;
+    position: absolute;
+    z-index: 3;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 75%;
+    cursor: pointer
+}
+
+.right-chevron-div-too {
+    position: absolute;
+    right: 0;
+    top: 45%
 }
 
 /*Gallery*/
+
+#gallery {
+    background-color: darkslategray;
+    width: 100%;
+    height: 18rem
+}
+
+#gallery-display {
+    margin-left: 3em;
+    margin-top: 1em;
+}
+
+.gallery-photo-div {
+    display: inline-block
+}
+
+.gallery-photo {
+    display: inline;
+    border-radius: 2px;
+    box-shadow: 5px 5px 10px;
+    cursor: pointer;
+}
+
+.glyph-link:link {
+    text-decoration: none;
+    font-size: 5em;
+    color: white;
+    vertical-align: middle;
+    display: inline-block;
+    opacity: 0.5;
+    font-weight: 800;
+}
+
+.glyph-link:visited {
+    text-decoration: none;
+    font-size: 5em;
+    color: white;
+    vertical-align: middle;
+    display: inline-block;
+    opacity: 0.5;
+    font-weight: 800;
+
+}
+
+.glyph-link:hover {
+    text-decoration: none;
+    font-size: 5em;
+    color: white;
+    vertical-align: middle;
+    display: inline-block;
+    opacity: 1;
+    font-weight: 800;
+}
+
+.glyph-link:active {
+    text-decoration: none;
+    font-size: 5em;
+    color: white;
+    vertical-align: middle;
+    display: inline-block;
+    opacity: 0.5;
+    font-weight: 800;
+}
+
+.eyee {
+    color: white;
+    vertical-align: top;
+    right: 1.5em;
+    opacity: 1
+}
+
+.eyee-hidden {
+    color: white;
+    vertical-align: top;
+    right: 1.5em;
+    opacity: 0
+}
+
+#left-chevron{
+    margin-left: 1em;
+}
+
+#right-chevron {
+    margin-right: 1em
+}
+
+.gallery-clicked {
+    border: white 1px solid;
+}
+
+
+/*Modal*/
+
+/*#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: 0.5;
+}
+
+
+
+#modal-div {
+    position: absolute;
+    display: block;
+    background: lightgray;
+    border-radius: 5px;
+    border: 2px solid darkgray;
+    width: 37em;
+    height: 14em;
+    left: 50em;
+    top: 20em;
+    box-shadow: 5px 5px 7px
+}
+
+#modal-div h2 {
+    text-align: center;
+    padding-top: 2em
+}*/
